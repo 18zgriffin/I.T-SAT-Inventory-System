@@ -36,6 +36,10 @@ class ConversionGUI:
         self.close_button = Button(master, text="Exit", command=master.quit)
         self.close_button.grid(row=7, column=1, sticky="e")
 
+        #result of login
+        self.feetLabel = Label(master, text=" ")
+        self.feetLabel.grid(column=0, row=7)
+
         #info button displays pages information
         self.button_showinfo = Button(master, text="?", command=self.loginInfoWindow)
         self.button_showinfo.grid(column=1, row=2, sticky="e", pady=(0, 35))
