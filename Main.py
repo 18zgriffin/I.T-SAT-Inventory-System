@@ -37,12 +37,18 @@ class ConversionGUI:
         self.close_button.grid(row=7, column=1, sticky="e")
 
         #result of login
-        self.feetLabel = Label(master, text=" ")
-        self.feetLabel.grid(column=0, row=7)
+        self.attemptResult = StringVar()
+        self.feetLabel = Label(master, textvariable=self.attemptResult)
+        self.feetLabel.grid(column=0, row=7, columnspan=2)
 
         #info button displays pages information
         self.button_showinfo = Button(master, text="?", command=self.loginInfoWindow)
-        self.button_showinfo.grid(column=1, row=2, sticky="e", pady=(0, 35))
+        self.button_showinfo.grid(column=1, row=2, sticky="e", pady=(0, 37))
+
+    def create_window(self):
+        window = Toplevel(root)
+        self.feetLabel = Label(window, text="Password")
+        self.feetLabel.grid(column=1, row=4)
 
     #the login function, this gets the password and username database files and tests to see if the user input values
     #match any of the logins
@@ -63,18 +69,20 @@ class ConversionGUI:
                 print("Good User")
                 if enterpassword == plist[x]:
                     print("Good Pass")
+                    self.create_window()
+                    return
                 else:
                     print("Bad Pass")
 
             else:
                 print("Bad User")
             x = x + 1
+        self.attemptResult.set("Wrong credentials, try again!")
         return
 
     #function which runs the information window
-    def loginInfoWindow(hi):
+    def loginInfoWindow(self):
         showinfo("LoginHelp", "Enter a valid Username and Password into appropriate entry boxes")
-
 
 #starts up the GUI
 root = Tk()
