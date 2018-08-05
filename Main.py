@@ -91,6 +91,13 @@ class ConversionGUI:
         self.button_showinfo = Button(choicewindow, text="?", command=self.loginInfoWindow)
         self.button_showinfo.grid(column=1, row=2, sticky="e", pady=(0, 37))
 
+        # activates if the user ever exits this window using the default [X]
+        choicewindow.protocol('WM_DELETE_WINDOW', self.doSomething)
+
+    # if the user exits the window while not in the main login window this makes the code is fully exited
+    def doSomething(self):
+        root.destroy()
+
     # logs the user out and shows the login screen again
     def logout(self, w):
         w.destroy()
