@@ -1,1 +1,7 @@
-['admin']
+admin
+user
+man
+user
+man
+admin
+dude

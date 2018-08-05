@@ -7,10 +7,10 @@ class ConversionGUI:
     def __init__(self, master):
         #names the window
         self.master = master
-        master.title("Number Guesser")
+        master.title("House Inventory - Login")
 
         #title text at the top window
-        self.titleText = Label(master, text="Number Guesser:", font=("Times", "24", "bold italic"))
+        self.titleText = Label(master, text="House Inventory - Login", font=("Times", "24", "bold italic"))
         self.titleText.grid(column = 0, columnspan = 3, row = 2, pady = 15)
 
         # lable of highest number
@@ -45,12 +45,27 @@ class ConversionGUI:
     #functions to them assign them back to the class and give results
     def submit(self):
         #assigns the class variables to variables for the calculation
-        enterUsername = self.username.get()
-        enterPassword = self.password.get()
-        U = open(“usernames.txt”,”r”)
+        enterusername = self.username.get()
+        enterpassword = self.password.get()
+        u = open("Usernames.txt", "r")
+        ulist = [line.rstrip('\n') for line in u]
+        p = open("passwords.txt", "r")
+        plist = [line.rstrip('\n') for line in p]
+        print(ulist)
+        print(plist)
 
-        for i in
-        if enterUsername
+        x = 0
+        for i in ulist:
+            if enterusername == i:
+                print("Good User")
+                if enterpassword == plist[x]:
+                    print("Good Pass")
+                else:
+                    print("Bad Pass")
+
+            else:
+                print("Bad User")
+            x = x + 1
         return
 
     def loginInfoWindow(hi):
