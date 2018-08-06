@@ -3,36 +3,22 @@
 #throughout commits this file (will of had/will have) random code in it they may not ever
 #appear in the actuall code although these lines will be all that remains once completed
 
-from tkinter import *
-
-class Window1:
-
-    def __init__(self, master):
-
-        # keep `root` in `self.master`
-        self.master = master
-
-        self.label = Button(self.master, text="Example", command=self.load_new)
-        self.label.pack()
-
-    def load_new(self):
-        self.label.destroy()
-
-        # use `root` with another class
-        self.another = Window2(self.master)
+import tkinter as tk
 
 
-class Window2:
+def center_window(centering):
+    # get screen width and height
+    screen_width = centering.winfo_screenwidth()
+    screen_height = centering.winfo_screenheight()
+    width = centering.winfo_width
+    height = centering.winfo_height
 
-    def __init__(self, master):
-
-        # keep `root` in `self.master`
-        self.master = master
-
-        self.label = Label(self.master, text="Example")
-        self.label.pack()
+    # calculate position x and y coordinates
+    x = (screen_width/2) - (width/2)
+    y = (screen_height/2) - (height/2)
+    centering.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
 
-root = Tk()
-run = Window1(root)
+root = tk.Tk()
+center_window()
 root.mainloop()

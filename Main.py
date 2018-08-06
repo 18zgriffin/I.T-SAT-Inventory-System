@@ -1,9 +1,10 @@
 from tkinter import *
 from tkinter.messagebox import showinfo
 
-class InventorySystem:
+class InventorySystem(Frame):
     # initializes master
     def __init__(self, master):
+        Frame.__init__(self, master)
         # names the window
         self.master = master
         master.title("House Inventory - Login")
@@ -84,9 +85,8 @@ class InventorySystem:
         self.choicewindow = choicewindow
         choicewindow.title("House Inventory - Selection Page")
 
-
         # info button displays pages information
-        self.button_showinfo = Button(choicewindow, text="?", command=self.loginInfoWindow)
+        self.button_showinfo = Button(choicewindow, text="?", command=self.loginInfoWindow, width=2)
         self.button_showinfo.grid(column=3, row=1, sticky="e")
 
         self.currentUser = Label(choicewindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
@@ -155,6 +155,13 @@ class InventorySystem:
         # this runs the logout command causing the current window to close and to return to the login screen
         self.logoutButton = Button(searchwindow, text="Logout", command=lambda: self.logout(searchwindow))
         self.logoutButton.grid(row=6, column=0, sticky="w", pady=(10, 0))
+
+        #frame basics
+        self.frame = Frame(searchwindow, bd=2, relief="ridge", width=100, height=100)
+        self.frame.grid(row=10)
+
+        self.framelabel = Label(self.frame, text="Ho")
+        self.framelabel.pack()
 
         searchwindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
 
