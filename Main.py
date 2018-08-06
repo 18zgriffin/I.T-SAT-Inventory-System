@@ -99,17 +99,17 @@ class InventorySystem:
         self.addButton = Button(choicewindow, text="Add item")
         self.addButton.grid(column=1, row=3)
 
-        # button which proceeds to lookup item window
+        # this runs the search_window command causing the current window to close and a new search window to open
         self.lookButton = Button(choicewindow, text="Lookup item", command=lambda: self.search_window(choicewindow))
         self.lookButton.grid(column=2, row=3)
 
         # this runs the logout command causing the current window to close and to return to the login screen
         self.logoutButton = Button(choicewindow, text="Logout", command=lambda: self.logout(choicewindow))
-        self.logoutButton.grid(row=4, column=0, sticky="w", pady=(20,0))
+        self.logoutButton.grid(row=4, column=0, sticky="w", pady=(10, 0))
 
         # button which closes the GUI
         self.close_button = Button(choicewindow, text="Exit", command=choicewindow.quit, width=4)
-        self.close_button.grid(row=4, column=3, sticky="e", pady=(20,0))
+        self.close_button.grid(row=4, column=3, sticky="e", pady=(10, 0))
 
         # activates if the user ever exits this window using the default [X]
         choicewindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
@@ -125,23 +125,36 @@ class InventorySystem:
         self.button_showinfo = Button(searchwindow, text="?", command=self.loginInfoWindow, width=2)
         self.button_showinfo.grid(column=3, row=1, sticky="e")
 
+        #displays currently logged in user
+        self.currentUser = Label(searchwindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
+        self.currentUser.grid(column=1, columnspan=2, row=1)
+
         # this returns to previous window
         self.backButton = Button(searchwindow, text="Back", command=lambda: self.back(searchwindow, choicewindow))
         self.backButton.grid(row=1, column=0, sticky="w")
 
+        # page title
         self.titleText = Label(searchwindow, text="House Inventory - Search", font=("Times", "24", "bold italic"))
         self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
 
-        self.searchLabel = Label(searchwindow, text="Add item")
+        self.searchLabel = Label(searchwindow, text="Enter Item Name")
         self.searchLabel.grid(column=1, columnspan=2, row=3)
+
+        self.searchterm = StringVar()
+        self.entryValue = Entry(searchwindow, textvariable=self.searchterm, width=15)
+        self.entryValue.grid(row=4, column=1, columnspan=2)
+
+        # button which proceeds to add item window
+        self.addButton = Button(searchwindow, text="Search")
+        self.addButton.grid(column=1, columnspan=2, row=5)
 
         # button which closes the GUI
         self.close_button = Button(searchwindow, text="Exit", command=choicewindow.quit, width=4)
-        self.close_button.grid(row=4, column=3, sticky="e", pady=(20,0))
+        self.close_button.grid(row=6, column=3, sticky="e", pady=(10, 0))
 
         # this runs the logout command causing the current window to close and to return to the login screen
         self.logoutButton = Button(searchwindow, text="Logout", command=lambda: self.logout(searchwindow))
-        self.logoutButton.grid(row=4, column=0, sticky="w", pady=(20,0))
+        self.logoutButton.grid(row=6, column=0, sticky="w", pady=(10, 0))
 
         searchwindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
 
