@@ -96,7 +96,7 @@ class InventorySystem(Frame):
         self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
 
         # button which proceeds to add item window
-        self.addButton = Button(choicewindow, text="Add item")
+        self.addButton = Button(choicewindow, text="Add item", command=lambda: self.add_window(choicewindow))
         self.addButton.grid(column=1, row=3)
 
         # this runs the search_window command causing the current window to close and a new search window to open
@@ -105,11 +105,11 @@ class InventorySystem(Frame):
 
         # this runs the logout command causing the current window to close and to return to the login screen
         self.logoutButton = Button(choicewindow, text="Logout", command=lambda: self.logout(choicewindow))
-        self.logoutButton.grid(row=4, column=0, sticky="w", pady=(10, 0))
+        self.logoutButton.grid(row=4, column=0, sticky="w", pady=(15, 0))
 
         # button which closes the GUI
         self.close_button = Button(choicewindow, text="Exit", command=choicewindow.quit, width=4)
-        self.close_button.grid(row=4, column=3, sticky="e", pady=(10, 0))
+        self.close_button.grid(row=4, column=3, sticky="e", pady=(15, 0))
 
         # activates if the user ever exits this window using the default [X]
         choicewindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
@@ -150,22 +150,77 @@ class InventorySystem(Frame):
 
         # button which closes the GUI
         self.close_button = Button(searchwindow, text="Exit", command=choicewindow.quit, width=4)
-        self.close_button.grid(row=6, column=3, sticky="e", pady=(10, 0))
+        self.close_button.grid(row=6, column=3, sticky="e", pady=(15, 0))
 
         # this runs the logout command causing the current window to close and to return to the login screen
         self.logoutButton = Button(searchwindow, text="Logout", command=lambda: self.logout(searchwindow))
-        self.logoutButton.grid(row=6, column=0, sticky="w", pady=(10, 0))
-
-        #frame basics
-        self.frame = Frame(searchwindow, bd=2, relief="ridge", width=100, height=100)
-        self.frame.grid(row=10)
-
-        self.framelabel = Label(self.frame, text="Ho")
-        self.framelabel.pack()
+        self.logoutButton.grid(row=6, column=0, sticky="w", pady=(15, 0))
 
         searchwindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
 
-    # if the user exits the window while not in the main login window this makes the code is fully exited
+    def add_window(self, choicewindow):
+        choicewindow.withdraw()
+        addwindow = Toplevel(root)
+        self.addwindow = addwindow
+        addwindow.title("House Inventory - New Item Page")
+
+        # info button displays pages information
+        self.button_showinfo = Button(addwindow, text="?", command=self.loginInfoWindow, width=2)
+        self.button_showinfo.grid(column=3, row=1, sticky="e")
+
+        #displays currently logged in user
+        self.currentUser = Label(addwindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
+        self.currentUser.grid(column=1, columnspan=2, row=1)
+
+        # this returns to previous window
+        self.backButton = Button(addwindow, text="Back", command=lambda: self.back(addwindow, choicewindow))
+        self.backButton.grid(row=1, column=0, sticky="w")
+
+        # page title
+        self.titleText = Label(addwindow, text="House Inventory - New Item", font=("Times", "24", "bold italic"))
+        self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
+
+        #box in center of add item page
+        self.addframe = Frame(addwindow, bd=2, relief="ridge", width=360, height=100)
+        self.addframe.grid(row=3, column=0, columnspan=4)
+        self.addframe.pack_propagate(0)
+
+        self.newname = StringVar()
+        self.newname.set("       <Item Name>")
+        self.addframename = Entry(self.addframe, textvariable=self.newname, width=16)
+        self.addframename.grid(column=0, row=1, sticky="w")
+
+        self.addframeowner = Label(self.addframe, text="Owner: "+self.user, width=16)
+        self.addframeowner.grid(column=1, row=1)
+
+        self.newdescrip = StringVar()
+        self.newdescrip.set("<Enter a description of the item>")
+        self.addframedescrip = Entry(self.addframe, textvariable=self.newdescrip, width=33)
+        self.addframedescrip.grid(column=0, row=2, columnspan=2)
+
+        self.addlocation = StringVar()
+        self.addlocation.set("     <Location>")
+        self.addframelocation = OptionMenu(self.addframe, self.addlocation, "Lounge", "Bedroom", "Kitchen")
+        self.addframelocation.grid(column=1, row=3, sticky="ew")
+
+        self.addframepricelabel = Label(self.addframe, text="Price: ")
+        self.addframepricelabel.grid(column=0, row=3, sticky="w")
+        self.newPrice = IntVar()
+        self.newPrice.set("")
+        self.addframeprice = Entry(self.addframe, textvariable=self.newPrice, width=11)
+        self.addframeprice.grid(column=0, row=3, sticky="e")
+
+        # button which closes the GUI
+        self.close_button = Button(addwindow, text="Exit", command=choicewindow.quit, width=4)
+        self.close_button.grid(row=6, column=3, sticky="e")
+
+        # this runs the logout command causing the current window to close and to return to the login screen
+        self.logoutButton = Button(addwindow, text="Logout", command=lambda: self.logout(addwindow))
+        self.logoutButton.grid(row=6, column=0, sticky="w")
+
+        addwindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
+
+    # if the user exits the window while not in the main login window this makes the code is fully shutdown
     def defaultExit(self):
         root.destroy()
 

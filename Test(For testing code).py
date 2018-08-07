@@ -6,19 +6,21 @@
 import tkinter as tk
 
 
-def center_window(centering):
-    # get screen width and height
-    screen_width = centering.winfo_screenwidth()
-    screen_height = centering.winfo_screenheight()
-    width = centering.winfo_width
-    height = centering.winfo_height
-
-    # calculate position x and y coordinates
-    x = (screen_width/2) - (width/2)
-    y = (screen_height/2) - (height/2)
-    centering.geometry('%dx%d+%d+%d' % (width, height, x, y))
+def on_entry_click(event):
+    """function that gets called whenever entry is clicked"""
+    if entry.get() == 'Enter your user name...':
+       entry.delete(0, "end") # delete all the text in the entry
+       entry.insert(0, '') #Insert blank for user input
 
 
 root = tk.Tk()
-center_window()
+
+label = tk.Label(root, text="User: ")
+label.pack(side="left")
+
+entry = tk.Entry(root, bd=1)
+entry.insert(0, 'Enter your user name...')
+entry.bind('<FocusIn>', on_entry_click)
+entry.pack(side="left")
+
 root.mainloop()
