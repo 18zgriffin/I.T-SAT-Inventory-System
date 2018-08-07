@@ -1,0 +1,7 @@
+lounge
+bedroom1
+bedroom2
+kitchen
+bathroom1
+bathroom2
+laundry

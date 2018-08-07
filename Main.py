@@ -4,6 +4,7 @@ from tkinter.messagebox import showinfo
 class InventorySystem(Frame):
     # initializes master
     def __init__(self, master):
+        # allows me to use frames within other windows as frame is declared as the parent window
         Frame.__init__(self, master)
         # names the window
         self.master = master
@@ -14,7 +15,7 @@ class InventorySystem(Frame):
         self.titleText.grid(column=1,columnspan=2, row=2, pady=15)
 
         # info button displays pages information
-        self.button_showinfo = Button(master, text="?", command=self.loginInfoWindow)
+        self.button_showinfo = Button(master, text="?", command=lambda: self.InfoWindow("master"))
         self.button_showinfo.grid(column=3, row=1, sticky="e")
 
         # lable point for username
@@ -73,10 +74,6 @@ class InventorySystem(Frame):
         self.attemptResult.set("Wrong credentials, try again!")
         return
 
-    # function which runs the information window
-    def loginInfoWindow(self):
-        showinfo("LoginHelp", "Enter a valid Username and Password into appropriate entry boxes")
-
     # creates a new window(the choice window) and hides the original root window
     # this choice window allows a user to either proceed to add item page or search item page
     def choice_window(self):
@@ -86,7 +83,7 @@ class InventorySystem(Frame):
         choicewindow.title("House Inventory - Selection Page")
 
         # info button displays pages information
-        self.button_showinfo = Button(choicewindow, text="?", command=self.loginInfoWindow, width=2)
+        self.button_showinfo = Button(choicewindow, text="?", command=lambda: self.InfoWindow("choicewindow"), width=2)
         self.button_showinfo.grid(column=3, row=1, sticky="e")
 
         self.currentUser = Label(choicewindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
@@ -114,50 +111,8 @@ class InventorySystem(Frame):
         # activates if the user ever exits this window using the default [X]
         choicewindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
 
-
-    def search_window(self, choicewindow):
-        choicewindow.withdraw()
-        searchwindow = Toplevel(root)
-        self.searchwindow = searchwindow
-        searchwindow.title("House Inventory - Search Page")
-
-        # info button displays pages information
-        self.button_showinfo = Button(searchwindow, text="?", command=self.loginInfoWindow, width=2)
-        self.button_showinfo.grid(column=3, row=1, sticky="e")
-
-        #displays currently logged in user
-        self.currentUser = Label(searchwindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
-        self.currentUser.grid(column=1, columnspan=2, row=1)
-
-        # this returns to previous window
-        self.backButton = Button(searchwindow, text="Back", command=lambda: self.back(searchwindow, choicewindow))
-        self.backButton.grid(row=1, column=0, sticky="w")
-
-        # page title
-        self.titleText = Label(searchwindow, text="House Inventory - Search", font=("Times", "24", "bold italic"))
-        self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
-
-        self.searchLabel = Label(searchwindow, text="Enter Item Name")
-        self.searchLabel.grid(column=1, columnspan=2, row=3)
-
-        self.searchterm = StringVar()
-        self.entryValue = Entry(searchwindow, textvariable=self.searchterm, width=15)
-        self.entryValue.grid(row=4, column=1, columnspan=2)
-
-        # button which proceeds to add item window
-        self.addButton = Button(searchwindow, text="Search")
-        self.addButton.grid(column=1, columnspan=2, row=5)
-
-        # button which closes the GUI
-        self.close_button = Button(searchwindow, text="Exit", command=choicewindow.quit, width=4)
-        self.close_button.grid(row=6, column=3, sticky="e", pady=(15, 0))
-
-        # this runs the logout command causing the current window to close and to return to the login screen
-        self.logoutButton = Button(searchwindow, text="Logout", command=lambda: self.logout(searchwindow))
-        self.logoutButton.grid(row=6, column=0, sticky="w", pady=(15, 0))
-
-        searchwindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
-
+    # function which contains the add window and its contents, the add window is where the user can add new items to the
+    # database
     def add_window(self, choicewindow):
         choicewindow.withdraw()
         addwindow = Toplevel(root)
@@ -165,7 +120,7 @@ class InventorySystem(Frame):
         addwindow.title("House Inventory - New Item Page")
 
         # info button displays pages information
-        self.button_showinfo = Button(addwindow, text="?", command=self.loginInfoWindow, width=2)
+        self.button_showinfo = Button(addwindow, text="?", command=lambda: self.InfoWindow("addwindow"), width=2)
         self.button_showinfo.grid(column=3, row=1, sticky="e")
 
         #displays currently logged in user
@@ -180,45 +135,116 @@ class InventorySystem(Frame):
         self.titleText = Label(addwindow, text="House Inventory - New Item", font=("Times", "24", "bold italic"))
         self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
 
-        #box in center of add item page
+        #### Add Item Page Frame and Contents ####
+        # box in center of add item page
         self.addframe = Frame(addwindow, bd=2, relief="ridge", width=360, height=100)
         self.addframe.grid(row=3, column=0, columnspan=4)
         self.addframe.pack_propagate(0)
 
+        # entry box you can input the name of your item into
         self.newname = StringVar()
         self.newname.set("       <Item Name>")
         self.addframename = Entry(self.addframe, textvariable=self.newname, width=16)
         self.addframename.grid(column=0, row=1, sticky="w")
 
+        # place that displays who the owner is which is the creator
         self.addframeowner = Label(self.addframe, text="Owner: "+self.user, width=16)
         self.addframeowner.grid(column=1, row=1)
 
+        # entry box the item description can be entered into
         self.newdescrip = StringVar()
         self.newdescrip.set("<Enter a description of the item>")
         self.addframedescrip = Entry(self.addframe, textvariable=self.newdescrip, width=33)
         self.addframedescrip.grid(column=0, row=2, columnspan=2)
 
+        # drop down menu the a user can select an item location from
         self.addlocation = StringVar()
         self.addlocation.set("     <Location>")
         self.addframelocation = OptionMenu(self.addframe, self.addlocation, "Lounge", "Bedroom", "Kitchen")
         self.addframelocation.grid(column=1, row=3, sticky="ew")
 
+        # label of price and entry box to enter the price of the item into
         self.addframepricelabel = Label(self.addframe, text="Price: ")
         self.addframepricelabel.grid(column=0, row=3, sticky="w")
         self.newPrice = IntVar()
         self.newPrice.set("")
         self.addframeprice = Entry(self.addframe, textvariable=self.newPrice, width=11)
         self.addframeprice.grid(column=0, row=3, sticky="e")
+        #### End ####
+
+        # this runs the save command causing the program to save the entered item to the database
+        self.saveButton = Button(addwindow, text="Save", command=self.save)
+        self.saveButton.grid(row=6, column=1, columnspan=2, pady=(2.5, 0))
 
         # button which closes the GUI
         self.close_button = Button(addwindow, text="Exit", command=choicewindow.quit, width=4)
-        self.close_button.grid(row=6, column=3, sticky="e")
+        self.close_button.grid(row=7, column=3, sticky="e")
 
         # this runs the logout command causing the current window to close and to return to the login screen
         self.logoutButton = Button(addwindow, text="Logout", command=lambda: self.logout(addwindow))
-        self.logoutButton.grid(row=6, column=0, sticky="w")
+        self.logoutButton.grid(row=7, column=0, sticky="w")
 
         addwindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
+
+    def search_window(self, choicewindow):
+        choicewindow.withdraw()
+        searchwindow = Toplevel(root)
+        self.searchwindow = searchwindow
+        searchwindow.title("House Inventory - Search Page")
+
+        # info button displays pages information
+        self.button_showinfo = Button(searchwindow, text="?", command=lambda: self.InfoWindow("searchwindow"), width=2)
+        self.button_showinfo.grid(column=3, row=1, sticky="e")
+
+        # displays currently logged in user
+        self.currentUser = Label(searchwindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
+        self.currentUser.grid(column=1, columnspan=2, row=1)
+
+        # this button returns to previous window
+        self.backButton = Button(searchwindow, text="Back", command=lambda: self.back(searchwindow, choicewindow))
+        self.backButton.grid(row=1, column=0, sticky="w")
+
+        # page title
+        self.titleText = Label(searchwindow, text="House Inventory - Search", font=("Times", "24", "bold italic"))
+        self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
+
+        #### Frame which contains search label and entry box for the search ####
+        # box in center of add item page
+        self.searchframe = Frame(searchwindow, bd=2, relief="ridge", width=360, height=100)
+        self.searchframe.grid(row=3, column=1, columnspan=2)
+        self.searchframe.pack_propagate(0)
+
+        # label for what you must enter for the search
+        self.searchLabel = Label(self.searchframe, text="Enter Item Name or Related Content")
+        self.searchLabel.grid(column=1, columnspan=2, row=3, padx=5, pady=5)
+
+        # entry window that you enter you search term into
+        self.searchterm = StringVar()
+        self.entryValue = Entry(self.searchframe, textvariable=self.searchterm, width=20)
+        self.entryValue.grid(row=4, column=1, columnspan=2, padx=5, pady=(0, 5))
+        #### End ####
+
+        # button which activates the search function causing a search in database to be performed and the search results
+        # page to appear
+        self.addButton = Button(searchwindow, text="Search", command=lambda: self.results_window(searchwindow))
+        self.addButton.grid(column=1, columnspan=2, row=5)
+
+        # button which closes the GUI
+        self.close_button = Button(searchwindow, text="Exit", command=choicewindow.quit, width=4)
+        self.close_button.grid(row=6, column=3, sticky="e", pady=(15, 0))
+
+        # this runs the logout command causing the current window to close and to return to the login screen
+        self.logoutButton = Button(searchwindow, text="Logout", command=lambda: self.logout(searchwindow))
+        self.logoutButton.grid(row=6, column=0, sticky="w", pady=(15, 0))
+
+        # detects if the user pressed the default [X] button and shuts down code fully
+        searchwindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
+
+    def results_window(self, searchwindow):
+        searchwindow.withdraw()
+        resultswindow = Toplevel(root)
+        self.resultswindow = resultswindow
+        resultswindow.title("House Inventory - Search Results")
 
     # if the user exits the window while not in the main login window this makes the code is fully shutdown
     def defaultExit(self):
@@ -229,10 +255,37 @@ class InventorySystem(Frame):
         window.destroy()
         root.deiconify()
 
+    # deletes the current window and returns to the previous one
     def back(self, window, prewindow):
         window.destroy()
         prewindow.deiconify()
 
+    def save(self):
+        print("Hey")
+
+    # function which runs the information window
+    def InfoWindow(self, window):
+        # opens information files and writes their contents to a list
+        i = open("Info.txt", "r")
+        ilist = [line.rstrip('\n') for line in i]
+        ititles = open("InfoTitles.txt", "r")
+        ititleslist = [line.rstrip('\n') for line in ititles]
+        # checks which window the user is on and then assigns a int value that corresponds to the information for the
+        # current window out of the lists
+        if window == "master":
+            self.title = 0
+            self.information = 0
+        elif window == "choicewindow":
+            self.title = 1
+            self.information = 1
+        elif window == "searchwindow":
+            self.title = 2
+            self.information = 2
+        elif window == "addwindow":
+            self.title = 3
+            self.information = 3
+        # runs the showinfo which that displays the appropriate information
+        showinfo(ititleslist[self.title], ilist[self.information])
 
 # starts up the GUI
 root = Tk()

@@ -1,0 +1,4 @@
+Login Page Information
+Choice Page Information
+Search Page Information
+New Item Page Information
