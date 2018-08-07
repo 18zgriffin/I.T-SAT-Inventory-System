@@ -246,6 +246,32 @@ class InventorySystem(Frame):
         self.resultswindow = resultswindow
         resultswindow.title("House Inventory - Search Results")
 
+        # info button displays pages information
+        self.button_showinfo = Button(resultswindow, text="?", command=lambda: self.InfoWindow("resultswindow"), width=2)
+        self.button_showinfo.grid(column=3, row=1, sticky="e")
+
+        # displays currently logged in user
+        self.currentUser = Label(resultswindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
+        self.currentUser.grid(column=1, columnspan=2, row=1)
+
+        # this button returns to previous window
+        self.backButton = Button(resultswindow, text="Back", command=lambda: self.back(resultswindow, searchwindow))
+        self.backButton.grid(row=1, column=0, sticky="w")
+
+        # page title
+        self.titleText = Label(resultswindow, text="House Inventory - Search", font=("Times", "24", "bold italic"))
+        self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
+
+        # button which closes the GUI
+        self.close_button = Button(resultswindow, text="Exit", command=resultswindow.quit, width=4)
+        self.close_button.grid(row=7, column=3, sticky="e")
+
+        # this runs the logout command causing the current window to close and to return to the login screen
+        self.logoutButton = Button(resultswindow, text="Logout", command=lambda: self.logout(resultswindow))
+        self.logoutButton.grid(row=7, column=0, sticky="w")
+
+        resultswindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
+
     # if the user exits the window while not in the main login window this makes the code is fully shutdown
     def defaultExit(self):
         root.destroy()
@@ -284,6 +310,9 @@ class InventorySystem(Frame):
         elif window == "addwindow":
             self.title = 3
             self.information = 3
+        elif window == "resultswindow":
+            self.title = 4
+            self.information = 4
         # runs the showinfo which that displays the appropriate information
         showinfo(ititleslist[self.title], ilist[self.information])
 
