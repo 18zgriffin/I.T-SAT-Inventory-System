@@ -1,1 +1,5 @@
-owner, name, description, price, location
+name,location,price,owner,description
+samsung tv,bedroom1,$1000,steve,tv with large 50inch screen
+electric shaver,bathroom,$100,tom,new electric shaver with multi use function
+metal ring,bathroom,$100,tom,new electric shaver with multi use function
+metal ring,breakroom,$100,tom,new electric shaver with multi use function

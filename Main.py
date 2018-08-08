@@ -226,8 +226,8 @@ class InventorySystem(Frame):
 
         # button which activates the search function causing a search in database to be performed and the search results
         # page to appear
-        self.addButton = Button(searchwindow, text="Search", command=lambda: self.results_window(searchwindow))
-        self.addButton.grid(column=1, columnspan=2, row=5)
+        self.searchButton = Button(searchwindow, text="Search", command=lambda: self.search(self.searchterm))
+        self.searchButton.grid(column=1, columnspan=2, row=5)
 
         # button which closes the GUI
         self.close_button = Button(searchwindow, text="Exit", command=choicewindow.quit, width=4)
@@ -259,8 +259,23 @@ class InventorySystem(Frame):
         self.backButton.grid(row=1, column=0, sticky="w")
 
         # page title
-        self.titleText = Label(resultswindow, text="House Inventory - Search", font=("Times", "24", "bold italic"))
+        self.titleText = Label(resultswindow, text="House Inventory - Results", font=("Times", "24", "bold italic"))
         self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
+
+        #### Frame containing search results ####
+        # box in center of add item page
+        self.resultsframe = Frame(resultswindow, bd=2, relief="ridge", bg="black")
+        self.resultsframe.grid(row=3, column=0, columnspan=6)
+
+        self.resultsframeidname = Label(self.resultsframe, text="Item Name")
+        self.resultsframeidname.grid(row=1, column=0, padx=(0, 1), pady=(0,1), sticky="ew")
+        self.resultsframeidlocation = Label(self.resultsframe, text="   Location   ")
+        self.resultsframeidlocation.grid(row=1, column=1, padx=(0, 1))
+        self.resultsframeidvalue = Label(self.resultsframe, text="  Value  ")
+        self.resultsframeidvalue.grid(row=1, column=2, padx=(0, 1))
+        self.resultsframeidowner = Label(self.resultsframe, text="  Owner  ")
+        self.resultsframeidowner.grid(row=1, column=3)
+        #### Frame END ####
 
         # button which closes the GUI
         self.close_button = Button(resultswindow, text="Exit", command=resultswindow.quit, width=4)
@@ -288,6 +303,50 @@ class InventorySystem(Frame):
 
     def save(self):
         print("Hey")
+
+    # this function is run when the user presses search in the search window, it runs the results window and then
+    # searches if the term is mentioned in any of the items details, then displaying applicable results
+    def search(self, searchterm):
+        # starts up the results window
+        self.results_window(self.searchwindow)
+        searchterm = self.searchterm.get()
+        # gets items file ready to use
+        items = open("items.txt", "r")
+        resultcount = 0
+        # for every item set it checks if the search term is found in it, if it is then it adds the item and its other
+        # details to the results page
+        for line in items:
+            found = re.search(str(searchterm), line)
+            if found:
+                itemdetails = line.rstrip('\n')
+                itemdetails = itemdetails.split(",")
+
+                # re-setups variable names to be added to the window of results everytime a new result is found
+                self.resultname = StringVar()
+                self.resultname.set(itemdetails[0])
+                self.resultlocation = StringVar()
+                self.resultlocation.set(itemdetails[1])
+                self.resultvalue = StringVar()
+                self.resultvalue.set(itemdetails[2])
+                self.resultowner = StringVar()
+                self.resultowner.set(itemdetails[3])
+
+                # adds the new results to the window, dropping down by 1 row everytime to avoid them overlapping
+                self.resultsframename = Button(self.resultsframe, textvariable=self.resultname)
+                self.resultsframename.grid(row=resultcount+2, column=0, padx=(0, 1), sticky="ew", pady=(0,1))
+                self.resultsframelocation = Label(self.resultsframe, textvariable=self.resultlocation)
+                self.resultsframelocation.grid(row=resultcount+2, column=1, padx=(0, 1), sticky="nsew", pady=(0,1))
+                self.resultsframevalue = Label(self.resultsframe, textvariable=self.resultvalue)
+                self.resultsframevalue.grid(row=resultcount+2, column=2, padx=(0, 1), sticky="nsew", pady=(0,1))
+                self.resultsframeowner = Label(self.resultsframe, textvariable=self.resultowner)
+                self.resultsframeowner.grid(row=resultcount+2, column=3, sticky="nsew", pady=(0,1))
+                resultcount += 1
+
+        # if the search term was never found it displays on the window "Sorry no results were found"
+        if resultcount == 0:
+            self.noresults = Label (self.resultsframe, text="Sorry no results were found")
+            self.noresults.grid(row=2, column=0, columnspan=4, sticky="ew")
+
 
     # function which runs the information window
     def InfoWindow(self, window):
