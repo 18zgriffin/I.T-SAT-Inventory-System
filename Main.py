@@ -158,9 +158,9 @@ class InventorySystem(Frame):
         self.addframedescrip.grid(column=0, row=2, columnspan=2)
 
         # drop down menu the a user can select an item location from
-        self.addlocation = StringVar()
-        self.addlocation.set("     <Location>")
-        self.addframelocation = OptionMenu(self.addframe, self.addlocation, "Lounge", "Bedroom", "Kitchen")
+        self.newlocation = StringVar()
+        self.newlocation.set("     <Location>")
+        self.addframelocation = OptionMenu(self.addframe, self.newlocation, "Lounge", "Bedroom", "Kitchen")
         self.addframelocation.grid(column=1, row=3, sticky="ew")
 
         # label of price and entry box to enter the price of the item into
@@ -168,7 +168,7 @@ class InventorySystem(Frame):
         self.addframepricelabel.grid(column=0, row=3, sticky="w")
         self.newPrice = IntVar()
         self.newPrice.set("")
-        self.addframeprice = Entry(self.addframe, textvariable=self.newPrice, width=11)
+        self.addframeprice = Entry(self.addframe, textvariable=self.newPrice, width=10)
         self.addframeprice.grid(column=0, row=3, sticky="e")
         #### End ####
 
@@ -179,6 +179,11 @@ class InventorySystem(Frame):
         # button which closes the GUI
         self.close_button = Button(addwindow, text="Exit", command=choicewindow.quit, width=4)
         self.close_button.grid(row=7, column=3, sticky="e")
+
+        # result of login
+        self.addResult = StringVar()
+        self.feetLabel = Label(addwindow, textvariable=self.addResult)
+        self.feetLabel.grid(column=1, row=7, columnspan=2)
 
         # this runs the logout command causing the current window to close and to return to the login screen
         self.logoutButton = Button(addwindow, text="Logout", command=lambda: self.logout(addwindow))
@@ -268,7 +273,7 @@ class InventorySystem(Frame):
         self.resultsframe.grid(row=3, column=0, columnspan=6)
 
         self.resultsframeidname = Label(self.resultsframe, text="Item Name")
-        self.resultsframeidname.grid(row=1, column=0, padx=(0, 1), pady=(0,1), sticky="ew")
+        self.resultsframeidname.grid(row=1, column=0, padx=(0, 1), pady=(0,1), sticky="we")
         self.resultsframeidlocation = Label(self.resultsframe, text="   Location   ")
         self.resultsframeidlocation.grid(row=1, column=1, padx=(0, 1))
         self.resultsframeidvalue = Label(self.resultsframe, text="  Value  ")
@@ -287,6 +292,13 @@ class InventorySystem(Frame):
 
         resultswindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
 
+    def itemadded_window(self, window):
+        window.destroy()
+        itemaddedwindow = Toplevel(root)
+        self.itemaddedwindow = itemaddedwindow
+        self.itemaddedwindow.title("House Inventory - Item added Succesfully")
+
+
     # if the user exits the window while not in the main login window this makes the code is fully shutdown
     def defaultExit(self):
         root.destroy()
@@ -302,7 +314,20 @@ class InventorySystem(Frame):
         prewindow.deiconify()
 
     def save(self):
-        print("Hey")
+        items = open("items.txt", "a")
+        newlocation = self.newlocation.get()
+        newdescrip = self.newdescrip.get()
+        newname = self.newname.get()
+        newuser = self.user
+        newprice = self.newPrice.get()
+        if (newprice and newdescrip and newname != 0 and newprice and newdescrip and newname != "" and
+                newprice and newdescrip and newname != " " and newname != "       <Item Name>" and newdescrip !=
+                "<Enter a description of the item>" and newlocation != "      <Location>"):
+            items.write("\n")
+            items.write(newname+","+newlocation+","+str(newprice)+","+newuser+","+newdescrip)
+        else:
+            self.addResult.set("Please enter a value into all boxes")
+
 
     # this function is run when the user presses search in the search window, it runs the results window and then
     # searches if the term is mentioned in any of the items details, then displaying applicable results
@@ -313,40 +338,43 @@ class InventorySystem(Frame):
         # gets items file ready to use
         items = open("items.txt", "r")
         resultcount = 0
-        # for every item set it checks if the search term is found in it, if it is then it adds the item and its other
-        # details to the results page
-        for line in items:
-            found = re.search(str(searchterm), line)
-            if found:
-                itemdetails = line.rstrip('\n')
-                itemdetails = itemdetails.split(",")
+        if searchterm == " " or searchterm == "":
+            self.noresults = Label(self.resultsframe, text="Please input a value")
+            self.noresults.grid(row=2, column=0, columnspan=4, sticky="ew")
+        else:
+            # for every item set it checks if the search term is found in it, if it is then it adds the item and its other
+            # details to the results page
+            for line in items:
+                found = re.search(str(searchterm), line)
+                if found:
+                    itemdetails = line.rstrip('\n')
+                    itemdetails = itemdetails.split(",")
 
-                # re-setups variable names to be added to the window of results everytime a new result is found
-                self.resultname = StringVar()
-                self.resultname.set(itemdetails[0])
-                self.resultlocation = StringVar()
-                self.resultlocation.set(itemdetails[1])
-                self.resultvalue = StringVar()
-                self.resultvalue.set(itemdetails[2])
-                self.resultowner = StringVar()
-                self.resultowner.set(itemdetails[3])
+                    # re-setups variable names to be added to the window of results everytime a new result is found
+                    self.resultname = StringVar()
+                    self.resultname.set(itemdetails[0])
+                    self.resultlocation = StringVar()
+                    self.resultlocation.set(itemdetails[1])
+                    self.resultvalue = StringVar()
+                    self.resultvalue.set(itemdetails[2])
+                    self.resultowner = StringVar()
+                    self.resultowner.set(itemdetails[3])
 
-                # adds the new results to the window, dropping down by 1 row everytime to avoid them overlapping
-                self.resultsframename = Button(self.resultsframe, textvariable=self.resultname)
-                self.resultsframename.grid(row=resultcount+2, column=0, padx=(0, 1), sticky="ew", pady=(0,1))
-                self.resultsframelocation = Label(self.resultsframe, textvariable=self.resultlocation)
-                self.resultsframelocation.grid(row=resultcount+2, column=1, padx=(0, 1), sticky="nsew", pady=(0,1))
-                self.resultsframevalue = Label(self.resultsframe, textvariable=self.resultvalue)
-                self.resultsframevalue.grid(row=resultcount+2, column=2, padx=(0, 1), sticky="nsew", pady=(0,1))
-                self.resultsframeowner = Label(self.resultsframe, textvariable=self.resultowner)
-                self.resultsframeowner.grid(row=resultcount+2, column=3, sticky="nsew", pady=(0,1))
-                resultcount += 1
+                    # adds the new results to the window, dropping down by 1 row everytime to avoid them overlapping
+                    self.resultsframename = Button(self.resultsframe, textvariable=self.resultname)
+                    self.resultsframename.grid(row=resultcount+2, column=0, padx=(0, 1), sticky="ew", pady=(0,1))
+                    self.resultsframelocation = Label(self.resultsframe, textvariable=self.resultlocation)
+                    self.resultsframelocation.grid(row=resultcount+2, column=1, padx=(0, 1), sticky="nsew", pady=(0,1))
+                    self.resultsframevalue = Label(self.resultsframe, textvariable=self.resultvalue)
+                    self.resultsframevalue.grid(row=resultcount+2, column=2, padx=(0, 1), sticky="nsew", pady=(0,1))
+                    self.resultsframeowner = Label(self.resultsframe, textvariable=self.resultowner)
+                    self.resultsframeowner.grid(row=resultcount+2, column=3, sticky="nsew", pady=(0,1))
+                    resultcount += 1
 
         # if the search term was never found it displays on the window "Sorry no results were found"
-        if resultcount == 0:
-            self.noresults = Label (self.resultsframe, text="Sorry no results were found")
-            self.noresults.grid(row=2, column=0, columnspan=4, sticky="ew")
-
+            if resultcount == 0:
+                self.noresults = Label (self.resultsframe, text="Sorry no results were found")
+                self.noresults.grid(row=2, column=0, columnspan=4, sticky="ew")
 
     # function which runs the information window
     def InfoWindow(self, window):
