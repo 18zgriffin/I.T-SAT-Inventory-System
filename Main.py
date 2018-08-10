@@ -101,7 +101,7 @@ class InventorySystem(Frame):
         self.lookButton.grid(column=2, row=3)
 
         # this runs the logout command causing the current window to close and to return to the login screen
-        self.logoutButton = Button(choicewindow, text="Logout", command=lambda: self.logout(choicewindow))
+        self.logoutButton = Button(choicewindow, text="Logout", command=lambda: self.logout_window(choicewindow))
         self.logoutButton.grid(row=4, column=0, sticky="w", pady=(15, 0))
 
         # button which closes the GUI
@@ -173,7 +173,7 @@ class InventorySystem(Frame):
         #### End ####
 
         # this runs the save command causing the program to save the entered item to the database
-        self.saveButton = Button(addwindow, text="Save", command=self.save)
+        self.saveButton = Button(addwindow, text="Save", command=lambda: (self.save(addwindow, choicewindow)))
         self.saveButton.grid(row=6, column=1, columnspan=2, pady=(2.5, 0))
 
         # button which closes the GUI
@@ -186,13 +186,13 @@ class InventorySystem(Frame):
         self.feetLabel.grid(column=1, row=7, columnspan=2)
 
         # this runs the logout command causing the current window to close and to return to the login screen
-        self.logoutButton = Button(addwindow, text="Logout", command=lambda: self.logout(addwindow))
+        self.logoutButton = Button(addwindow, text="Logout", command=lambda: self.logout_window(addwindow))
         self.logoutButton.grid(row=7, column=0, sticky="w")
 
         addwindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
 
-    def search_window(self, choicewindow):
-        choicewindow.withdraw()
+    def search_window(self, window):
+        window.withdraw()
         searchwindow = Toplevel(root)
         self.searchwindow = searchwindow
         searchwindow.title("House Inventory - Search Page")
@@ -206,7 +206,7 @@ class InventorySystem(Frame):
         self.currentUser.grid(column=1, columnspan=2, row=1)
 
         # this button returns to previous window
-        self.backButton = Button(searchwindow, text="Back", command=lambda: self.back(searchwindow, choicewindow))
+        self.backButton = Button(searchwindow, text="Back", command=lambda: self.back(searchwindow, self.choicewindow))
         self.backButton.grid(row=1, column=0, sticky="w")
 
         # page title
@@ -235,99 +235,15 @@ class InventorySystem(Frame):
         self.searchButton.grid(column=1, columnspan=2, row=5)
 
         # button which closes the GUI
-        self.close_button = Button(searchwindow, text="Exit", command=choicewindow.quit, width=4)
+        self.close_button = Button(searchwindow, text="Exit", command=searchwindow.quit, width=4)
         self.close_button.grid(row=6, column=3, sticky="e", pady=(15, 0))
 
         # this runs the logout command causing the current window to close and to return to the login screen
-        self.logoutButton = Button(searchwindow, text="Logout", command=lambda: self.logout(searchwindow))
+        self.logoutButton = Button(searchwindow, text="Logout", command=lambda: self.logout_window(searchwindow))
         self.logoutButton.grid(row=6, column=0, sticky="w", pady=(15, 0))
 
         # detects if the user pressed the default [X] button and shuts down code fully
         searchwindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
-
-    def results_window(self, searchwindow):
-        searchwindow.withdraw()
-        resultswindow = Toplevel(root)
-        self.resultswindow = resultswindow
-        resultswindow.title("House Inventory - Search Results")
-
-        # info button displays pages information
-        self.button_showinfo = Button(resultswindow, text="?", command=lambda: self.InfoWindow("resultswindow"), width=2)
-        self.button_showinfo.grid(column=3, row=1, sticky="e")
-
-        # displays currently logged in user
-        self.currentUser = Label(resultswindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
-        self.currentUser.grid(column=1, columnspan=2, row=1)
-
-        # this button returns to previous window
-        self.backButton = Button(resultswindow, text="Back", command=lambda: self.back(resultswindow, searchwindow))
-        self.backButton.grid(row=1, column=0, sticky="w")
-
-        # page title
-        self.titleText = Label(resultswindow, text="House Inventory - Results", font=("Times", "24", "bold italic"))
-        self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
-
-        #### Frame containing search results ####
-        # box in center of add item page
-        self.resultsframe = Frame(resultswindow, bd=2, relief="ridge", bg="black")
-        self.resultsframe.grid(row=3, column=0, columnspan=6)
-
-        self.resultsframeidname = Label(self.resultsframe, text="Item Name")
-        self.resultsframeidname.grid(row=1, column=0, padx=(0, 1), pady=(0,1), sticky="we")
-        self.resultsframeidlocation = Label(self.resultsframe, text="   Location   ")
-        self.resultsframeidlocation.grid(row=1, column=1, padx=(0, 1))
-        self.resultsframeidvalue = Label(self.resultsframe, text="  Value  ")
-        self.resultsframeidvalue.grid(row=1, column=2, padx=(0, 1))
-        self.resultsframeidowner = Label(self.resultsframe, text="  Owner  ")
-        self.resultsframeidowner.grid(row=1, column=3)
-        #### Frame END ####
-
-        # button which closes the GUI
-        self.close_button = Button(resultswindow, text="Exit", command=resultswindow.quit, width=4)
-        self.close_button.grid(row=7, column=3, sticky="e")
-
-        # this runs the logout command causing the current window to close and to return to the login screen
-        self.logoutButton = Button(resultswindow, text="Logout", command=lambda: self.logout(resultswindow))
-        self.logoutButton.grid(row=7, column=0, sticky="w")
-
-        resultswindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
-
-    def itemadded_window(self, window):
-        window.destroy()
-        itemaddedwindow = Toplevel(root)
-        self.itemaddedwindow = itemaddedwindow
-        self.itemaddedwindow.title("House Inventory - Item added Succesfully")
-
-
-    # if the user exits the window while not in the main login window this makes the code is fully shutdown
-    def defaultExit(self):
-        root.destroy()
-
-    # logs the user out and shows the login screen again
-    def logout(self, window):
-        window.destroy()
-        root.deiconify()
-
-    # deletes the current window and returns to the previous one
-    def back(self, window, prewindow):
-        window.destroy()
-        prewindow.deiconify()
-
-    def save(self):
-        items = open("items.txt", "a")
-        newlocation = self.newlocation.get()
-        newdescrip = self.newdescrip.get()
-        newname = self.newname.get()
-        newuser = self.user
-        newprice = self.newPrice.get()
-        if (newprice and newdescrip and newname != 0 and newprice and newdescrip and newname != "" and
-                newprice and newdescrip and newname != " " and newname != "       <Item Name>" and newdescrip !=
-                "<Enter a description of the item>" and newlocation != "      <Location>"):
-            items.write("\n")
-            items.write(newname+","+newlocation+","+str(newprice)+","+newuser+","+newdescrip)
-        else:
-            self.addResult.set("Please enter a value into all boxes")
-
 
     # this function is run when the user presses search in the search window, it runs the results window and then
     # searches if the term is mentioned in any of the items details, then displaying applicable results
@@ -375,6 +291,115 @@ class InventorySystem(Frame):
             if resultcount == 0:
                 self.noresults = Label (self.resultsframe, text="Sorry no results were found")
                 self.noresults.grid(row=2, column=0, columnspan=4, sticky="ew")
+
+    def results_window(self, searchwindow):
+        searchwindow.withdraw()
+        resultswindow = Toplevel(root)
+        self.resultswindow = resultswindow
+        resultswindow.title("House Inventory - Search Results")
+
+        # info button displays pages information
+        self.button_showinfo = Button(resultswindow, text="?", command=lambda: self.InfoWindow("resultswindow"), width=2)
+        self.button_showinfo.grid(column=3, row=1, sticky="e")
+
+        # displays currently logged in user
+        self.currentUser = Label(resultswindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
+        self.currentUser.grid(column=1, columnspan=2, row=1)
+
+        # this button returns to previous window
+        self.backButton = Button(resultswindow, text="Back", command=lambda: self.back(resultswindow, searchwindow))
+        self.backButton.grid(row=1, column=0, sticky="w")
+
+        # page title
+        self.titleText = Label(resultswindow, text="House Inventory - Results", font=("Times", "24", "bold italic"))
+        self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
+
+        #### Frame containing search results ####
+        # box in center of add item page
+        self.resultsframe = Frame(resultswindow, bd=2, relief="ridge", bg="black")
+        self.resultsframe.grid(row=3, column=0, columnspan=6)
+
+        self.resultsframeidname = Label(self.resultsframe, text="Item Name")
+        self.resultsframeidname.grid(row=1, column=0, padx=(0, 1), pady=(0,1), sticky="we")
+        self.resultsframeidlocation = Label(self.resultsframe, text="   Location   ")
+        self.resultsframeidlocation.grid(row=1, column=1, padx=(0, 1))
+        self.resultsframeidvalue = Label(self.resultsframe, text="  Value  ")
+        self.resultsframeidvalue.grid(row=1, column=2, padx=(0, 1))
+        self.resultsframeidowner = Label(self.resultsframe, text="  Owner  ")
+        self.resultsframeidowner.grid(row=1, column=3)
+        #### Frame END ####
+
+        # button which closes the GUI
+        self.close_button = Button(resultswindow, text="Exit", command=resultswindow.quit, width=4)
+        self.close_button.grid(row=7, column=3, sticky="e")
+
+        # this runs the logout command causing the current window to close and to return to the login screen
+        self.logoutButton = Button(resultswindow, text="Logout", command=lambda: self.logout_window(resultswindow))
+        self.logoutButton.grid(row=7, column=0, sticky="w")
+
+        resultswindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
+
+    # if the user exits the window while not in the main login window this makes the code is fully shutdown
+    def defaultExit(self):
+        root.destroy()
+
+    # logs the user out and shows the login screen again
+    def logout_window(self, window):
+        loop = "Loop"
+        logoutwindow = Toplevel(root)
+        self.logoutwindow = logoutwindow
+        self.sure = Label(logoutwindow, text="Are you sure about that?")
+        self.sure.grid(row=1, column=0, columnspan=2)
+        self.yes = Button(logoutwindow, text="Yes", command=lambda: self.logoutConfirm(window, logoutwindow, "Yes"))
+        self.yes.grid(row=2, column=0)
+        self.no = Button(logoutwindow, text="No", command=lambda: self.logoutConfirm(window, logoutwindow, "No"))
+        self.no.grid(row=2, column=1)
+
+    def logoutConfirm(self, window, logoutwindow, choice):
+            if choice == "Yes":
+                self.username.set("")
+                self.password.set("")
+                logoutwindow.destroy()
+                window.destroy()
+                root.deiconify()
+            elif choice == "No":
+                logoutwindow.destroy()
+
+
+    # deletes the current window and returns to the previous one
+    def back(self, window, prewindow):
+        window.destroy()
+        prewindow.deiconify()
+
+    def save(self, window, prewindow):
+        items = open("items.txt", "a")
+        newlocation = self.newlocation.get()
+        newdescrip = self.newdescrip.get()
+        newname = self.newname.get()
+        newuser = self.user
+        newprice = self.newPrice.get()
+        if (newprice and newdescrip and newname != 0 and newprice and newdescrip and newname != "" and
+                newprice and newdescrip and newname != " " and newname != "       <Item Name>" and newdescrip !=
+                "<Enter a description of the item>" and newlocation != "      <Location>"):
+            items.write("\n")
+            items.write(newname+","+newlocation+","+str(newprice)+","+newuser+","+newdescrip)
+            self.itemadded_window(window, prewindow)
+        else:
+            self.addResult.set("Please enter a value into all boxes")
+
+    def itemadded_window(self, window, prewindow):
+        window.destroy()
+        itemaddedwindow = Toplevel(root)
+        self.itemaddedwindow = itemaddedwindow
+        itemaddedwindow.title("House Inventory")
+
+        self.confirmtitle = Label(itemaddedwindow, text="Item added Successfully", font=("Times", "24", "bold italic"))
+        self.confirmtitle.grid(row=1, column=0, columnspan=2)
+
+        self.confirmadded = Button(itemaddedwindow, text="OK", command=lambda: self.back(itemaddedwindow, prewindow))
+        self.confirmadded.grid(row=2, column=0, columnspan=2)
+
+        itemaddedwindow.protocol('WM_DELETE_WINDOW', self.defaultExit)
 
     # function which runs the information window
     def InfoWindow(self, window):

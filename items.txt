@@ -3,5 +3,8 @@ samsung tv,bedroom1,$1000,steve,tv with large 50inch screen
 electric shaver,bathroom,$100,tom,new electric shaver with multi use function
 metal ring,bathroom,$100,tom,new electric shaver with multi use function
 metal ring,breakroom,$100,tom,new electric shaver with multi use function
-ha,Lounge,1,admin,a
 baking tray,Lounge,10,admin,silver inlayed baking tray
+
+       <Item 2Name>,Lounge,2,admin,<Enter a des2cription of the item>
+       <Item Nam2e>,Lounge,2,admin,<Enter a descr2iption of the item>
+       <Item Na2me>,Lounge,2,admin,<Enter a descri2ption of the item>
