@@ -8,3 +8,5 @@ baking tray,Lounge,10,admin,silver inlayed baking tray
        <Item 2Name>,Lounge,2,admin,<Enter a des2cription of the item>
        <Item Nam2e>,Lounge,2,admin,<Enter a descr2iption of the item>
        <Item Na2me>,Lounge,2,admin,<Enter a descri2ption of the item>
+       <Item Namea>,Lounge,2,admin,<Enter a descriptaion of the item>
+       <I2tem Name>,Lounge,3,admin,<Enter a 3description of the item>
