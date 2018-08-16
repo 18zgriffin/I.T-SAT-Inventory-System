@@ -3,3 +3,4 @@ Choice Page Information
 Search Page Information
 New Item Page Information
 Results Page Information
+Item Page Information

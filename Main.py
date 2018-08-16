@@ -124,6 +124,10 @@ class InventorySystem(Frame):
         choicewindow.withdraw()
         addwindow = Toplevel(root)
         self.addwindow = addwindow
+        llocations = []
+        flocations = open("locations.txt", "r")
+        for line in flocations:
+            llocations.append(line.strip("\n"))
         addwindow.title("House Inventory - New Item Page")
 
         # info button displays pages information
@@ -150,7 +154,7 @@ class InventorySystem(Frame):
 
         # entry box you can input the name of your item into
         self.newname = StringVar()
-        self.newname.set("       <Item Name>")
+        self.newname.set("      <Item Name>")
         self.addframename = Entry(self.addframe, textvariable=self.newname, width=16)
         self.addframename.grid(column=0, row=1, sticky="w")
 
@@ -161,21 +165,21 @@ class InventorySystem(Frame):
         # entry box the item description can be entered into
         self.newdescrip = StringVar()
         self.newdescrip.set("<Enter a description of the item>")
-        self.addframedescrip = Entry(self.addframe, textvariable=self.newdescrip, width=33)
+        self.addframedescrip = Entry(self.addframe, textvariable=self.newdescrip, width=36)
         self.addframedescrip.grid(column=0, row=2, columnspan=2)
 
         # drop down menu the a user can select an item location from
         self.newlocation = StringVar()
         self.newlocation.set("     <Location>")
-        self.addframelocation = OptionMenu(self.addframe, self.newlocation, "Lounge", "Bedroom", "Kitchen")
+        self.addframelocation = OptionMenu(self.addframe, self.newlocation, *llocations)
         self.addframelocation.grid(column=1, row=3, sticky="ew")
 
         # label of price and entry box to enter the price of the item into
-        self.addframepricelabel = Label(self.addframe, text="Price: ")
+        self.addframepricelabel = Label(self.addframe, text="Price:$")
         self.addframepricelabel.grid(column=0, row=3, sticky="w")
         self.newPrice = IntVar()
-        self.newPrice.set("")
-        self.addframeprice = Entry(self.addframe, textvariable=self.newPrice, width=10)
+        self.newPrice.set("0")
+        self.addframeprice = Entry(self.addframe, textvariable=self.newPrice, width=11)
         self.addframeprice.grid(column=0, row=3, sticky="e")
         #### End ####
 
@@ -292,6 +296,7 @@ class InventorySystem(Frame):
                     foundlist.append(itemdetails[0])
 
                     # adds the new results to the window, dropping down by 1 row every time to avoid them overlapping
+                    # also assigns the variables to the current button (default variable method?)
                     self.resultsframename = Button(self.resultsframe, textvariable=self.resultname, command=lambda
                         resultname=self.resultname, resultlocation=self.resultlocation, resultvalue=self.resultvalue,
                         resultowner=self.resultowner, resultdescrip=self.resultdescrip: self.item_window(resultname
@@ -370,7 +375,7 @@ class InventorySystem(Frame):
         itemvalue = itemvalue.get()
         itemowner = itemowner.get()
         itemdescrip = itemdescrip.get()
-        itemwindow.title("House Inventory - New Item Page")
+        itemwindow.title("House Inventory - View Item Page")
 
         # info button displays pages information
         self.button_showinfo = Button(itemwindow, text="?", command=lambda: self.InfoWindow("itemwindow"), width=2)
@@ -385,39 +390,43 @@ class InventorySystem(Frame):
         self.backButton.grid(row=1, column=0, sticky="w")
 
         # page title
-        self.titleText = Label(itemwindow, text="House Inventory - New Item", font=("Times", "24", "bold italic"))
+        self.titleText = Label(itemwindow, text="House Inventory - View Item", font=("Times", "24", "bold italic"))
         self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
 
         #### Add Item Page Frame and Contents ####
         # box in center of add item page
-        self.itemframe = Frame(itemwindow, bd=2, relief="ridge", width=360, height=100)
+        self.itemframe = Frame(itemwindow, bd=2, relief="ridge")
         self.itemframe.grid(row=3, column=0, columnspan=4)
         self.itemframe.pack_propagate(0)
 
         # entry box you can input the name of your item into
-        self.itemframename = Label(self.itemframe, text=itemname, width=16)
-        self.itemframename.grid(column=0, row=1, sticky="w")
+        self.itemframename = Label(self.itemframe, text=itemname, width=16, relief="ridge")
+        self.itemframename.grid(column=0, row=1, pady=1, padx=1)
 
         # place that displays who the owner is which is the creator
-        self.itemframeowner = Label(self.itemframe, text="Owner: " + itemowner, width=16)
-        self.itemframeowner.grid(column=1, row=1)
+        self.itemframeowner = Label(self.itemframe, text="Owner: " + str(itemowner), width=16, relief="ridge")
+        self.itemframeowner.grid(column=1, row=1, padx=1)
 
         # entry box the item description can be entered into
-        self.itemframedescrip = Label(self.itemframe, text=itemdescrip, width=33)
-        self.itemframedescrip.grid(column=0, row=2, columnspan=2)
+        self.itemframedescrip = Label(self.itemframe, text=itemdescrip, width=33, relief="ridge")
+        self.itemframedescrip.grid(column=0, row=2, columnspan=2, pady=2)
 
         # drop down menu the a user can select an item location from
-        self.itemframelocation = Label(self.itemframe, text=itemlocation)
+        self.itemframelocation = Label(self.itemframe, text=itemlocation, relief="ridge")
         self.itemframelocation.grid(column=1, row=3, sticky="ew")
 
         # label of price and entry box to enter the price of the item into
-        self.itemframeprice = Label(self.itemframe, text="Price: "+itemvalue)
-        self.itemframeprice.grid(column=0, row=3, sticky="w")
+        self.itemframeprice = Label(self.itemframe, text="Price:$"+itemvalue)
+        self.itemframeprice.grid(column=0, row=3, pady=1)
         #### End ####
 
         # this runs the save command causing the program to save the entered item to the database
-        self.saveButton = Button(itemwindow, text="Save", command=lambda: (self.save(itemwindow, self.resultswindow)))
-        self.saveButton.grid(row=6, column=1, columnspan=2, pady=(2.5, 0))
+        self.editButton = Button(itemwindow, text="Edit", width=6, command=lambda: self.edit_window(itemwindow,
+            itemname, itemlocation, itemvalue, itemowner, itemdescrip))
+        self.editButton.grid(row=6, column=1, pady=(2.5, 0))
+
+        self.removeButton = Button(itemwindow, text="Remove")
+        self.removeButton.grid(row=6, column=2, pady=(2.5, 0))
 
         # button which closes the GUI
         self.close_button = Button(itemwindow, text="Exit", command=lambda: self.defaultexit_window(), width=4)
@@ -429,6 +438,96 @@ class InventorySystem(Frame):
 
         # makes the default exit command run, whenever the user presses the default exit button
         itemwindow.protocol('WM_DELETE_WINDOW', lambda: self.defaultexit_window())
+
+    def edit_window(self, itemwindow, itemname, itemlocation, itemvalue, itemowner, itemdescrip):
+        # hides the previous page and sets up basics of new page
+        itemwindow.withdraw()
+        editwindow = Toplevel(root)
+        self.editwindow = editwindow
+        llocations = []
+        flocations = open("locations.txt", "r")
+        for line in flocations:
+            llocations.append(line.strip("\n"))
+        editwindow.title("House Inventory - Edit Item Page")
+
+        # info button displays pages information
+        self.button_showinfo = Button(editwindow, text="?", command=lambda: self.InfoWindow("editwindow"), width=2)
+        self.button_showinfo.grid(column=3, row=1, sticky="e")
+
+        # displays currently logged in user
+        self.currentUser = Label(editwindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
+        self.currentUser.grid(column=1, columnspan=2, row=1)
+
+        # this returns to previous window
+        self.backButton = Button(editwindow, text="Back", command=lambda: self.back(editwindow, itemwindow))
+        self.backButton.grid(row=1, column=0, sticky="w")
+
+        # page title
+        self.titleText = Label(editwindow, text="House Inventory - New Item", font=("Times", "24", "bold italic"))
+        self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
+
+        #### Add Item Page Frame and Contents ####
+        # box in center of add item page
+        self.editframe = Frame(editwindow, bd=2, relief="ridge", width=360, height=100)
+        self.editframe.grid(row=3, column=0, columnspan=4)
+        self.editframe.pack_propagate(0)
+
+        # entry box you can input the name of your item into
+        self.editname = StringVar()
+        self.editname.set(itemname)
+        self.editframename = Entry(self.editframe, textvariable=self.editname, width=16)
+        self.editframename.grid(column=0, row=1, sticky="w")
+
+        # place that displays who the owner is which is the creator
+        self.editframeownerlabel = Label(self.editframe, text=" Owner:")
+        self.editframeownerlabel.grid(column=1, row=1, sticky="w")
+        self.edituser = StringVar()
+        self.edituser.set(itemowner)
+        self.editframeowner = Entry(self.editframe, textvariable=self.edituser, width=10)
+        self.editframeowner.grid(column=1, row=1, sticky="e")
+
+        # entry box the item description can be entered into
+        self.editdescrip = StringVar()
+        self.editdescrip.set(itemdescrip)
+        self.editframedescrip = Entry(self.editframe, textvariable=self.editdescrip, width=36)
+        self.editframedescrip.grid(column=0, row=2, columnspan=2)
+
+        # drop down menu the a user can select an item location from
+        self.editlocation = StringVar()
+        self.editlocation.set(itemlocation)
+        self.editframelocation = OptionMenu(self.editframe, self.editlocation, *llocations)
+        self.editframelocation.config(width=16)
+        self.editframelocation.grid(column=1, row=3, sticky="ew")
+
+        # label of price and entry box to enter the price of the item into
+        self.editframepricelabel = Label(self.editframe, text="Price:$")
+        self.editframepricelabel.grid(column=0, row=3, sticky="w")
+        self.editPrice = IntVar()
+        self.editPrice.set(itemvalue)
+        self.editframeprice = Entry(self.editframe, textvariable=self.editPrice, width=11)
+        self.editframeprice.grid(column=0, row=3, sticky="e")
+        #### End ####
+
+        # this runs the save command causing the program to save the entered item to the database
+        self.saveButton = Button(editwindow, text="Save", command=lambda: (self.save(editwindow, itemwindow)))
+        self.saveButton.grid(row=6, column=1, columnspan=2, pady=(2.5, 0))
+
+        # button which closes the GUI
+        self.close_button = Button(editwindow, text="Exit", command=lambda: self.defaultexit_window(), width=4)
+        self.close_button.grid(row=7, column=3, sticky="e")
+
+        # result of login
+        self.editResult = StringVar()
+        self.feetLabel = Label(editwindow, textvariable=self.editResult)
+        self.feetLabel.grid(column=1, row=7, columnspan=2)
+
+        # a button that runs the logout command causing the current window to close and to return to the login screen
+        self.logoutButton = Button(editwindow, text="Logout", command=lambda: self.logout_window(editwindow))
+        self.logoutButton.grid(row=7, column=0, sticky="w")
+
+        # makes the default exit command run, whenever the user presses the default exit button
+        editwindow.protocol('WM_DELETE_WINDOW', lambda: self.defaultexit_window())
+
 
     # if the user presses either of the exit buttons, default or the one labeled exit. this window pops up, and if the
     # user selects yes it runs default exit and closes everything, if the user presses no it just closes the pop up
@@ -544,6 +643,9 @@ class InventorySystem(Frame):
         elif window == "resultswindow":
             self.title = 4
             self.information = 4
+        elif window == "itemwindow":
+            self.title = 5
+            self.information = 5
         # runs the showinfo which that displays the appropriate information
         showinfo(ititleslist[self.title], ilist[self.information])
 
