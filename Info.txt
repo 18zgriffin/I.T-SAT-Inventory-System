@@ -1,6 +1,6 @@
-This page is the login page
-This page is the choice page
-This page is the search page
-This page is the add page
-This page is the results page
-This page is the item page
+On this page you must input a valid username and password to gain access to the program
+On this page you can choose to either add a new item to the database or search for one currently in it. You also have the option to exit or logout
+On this page you can input a search term to look for in the data base. You must enter something to get any results. You also have the option to exit, go back or logout
+This is the add page on this page you can add a new item by inputing appropriate values into inputs. "\n" DO NOT INPUT COMMAS INTO A ITEM.
+This page displays the results of the search input, you may sometimes get no results. Click on the button with an item name on it to go to that items page
+This page displays all of an items details including description, if you are the owner or an admin you can access the edit button which allows you to change the items details

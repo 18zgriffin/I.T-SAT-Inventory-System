@@ -1,8 +1,13 @@
 name,location,price,owner,description
-samsung tv,bedroom1,$1000,steve,tv with large 50inch screen
-electric shaver,bathroom,$100,tom,new electric shaver with multi use function
-metal ring,bathroom,$100,tom,new electric shaver with multi use function
-metal ring,breakroom,$100,tom,new electric shaver with multi use function
-baking tray,counge,10,admin,silver inlayed baking tray
-bookcase,cedroom,999,admin,bookcase full of the whole GOT collection
+samsung tv,lounge,50,tim,tv with large 48inch screen
+electric shaver,bathroom,100,tom,new electric shaver with multi use function
+metal ring,bathroom,100,tom,new electric shaver with multi use function
+metal ring,breakroom,100,tom,new electric shaver with multi use function
+baking tray,counge,5,joe,silver inlayed baking tray
+bookcase,lounge,99,admin,bookcase full of the whole GOT collection
 explosive,castle,400,admin,I think its gonna blow
+dnd dice,bedroom1,500,zeke,assortment of dice
+bed,bedroom1,100,admin,blue bunk
+2tv,kitchen,204,admin,it big an blu
+
+boitoi,laundry,20,admin,it mine guys
