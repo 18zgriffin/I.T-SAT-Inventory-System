@@ -5,4 +5,3 @@ kitchen
 bathroom1
 bathroom2
 laundry
-jumping castle

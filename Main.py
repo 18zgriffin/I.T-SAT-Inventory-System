@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.messagebox import showinfo
+from tkinter import messagebox
 
 class InventorySystem(Frame):
     # initializes master
@@ -9,6 +10,7 @@ class InventorySystem(Frame):
         Frame.__init__(self, master)
         # names the window
         self.master = master
+        self.existence = 0
         master.title("House Inventory - Login")
 
         # title text at the top window
@@ -40,7 +42,7 @@ class InventorySystem(Frame):
         self.loginButton.grid(row=5, column=1, columnspan=2, pady=(2.5, 0))
 
         # button which closes the GUI
-        self.close_button = Button(master, text="Exit", command=lambda: self.defaultexit_window())
+        self.close_button = Button(master, text="Exit", command=lambda: self.exit_window())
         self.close_button.grid(row=6, column=3, sticky="e")
 
         # result of login
@@ -51,7 +53,7 @@ class InventorySystem(Frame):
         self.fillSpace = Label(master, text="           ")
         self.fillSpace.grid(column=0, row=6)
 
-        master.protocol('WM_DELETE_WINDOW', lambda: self.defaultexit_window())
+        master.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
 
     # the login function, this gets the password and username database files and tests to see if the user input values
     # match any of the logins
@@ -111,11 +113,11 @@ class InventorySystem(Frame):
         self.logoutButton.grid(row=4, column=0, sticky="w", pady=(15, 0))
 
         # button which closes the GUI
-        self.close_button = Button(choicewindow, text="Exit", command=lambda: self.defaultexit_window(), width=4)
+        self.close_button = Button(choicewindow, text="Exit", command=lambda: self.exit_window(), width=4)
         self.close_button.grid(row=4, column=3, sticky="e", pady=(15, 0))
 
         # activates if the user ever exits this window using the default [X]
-        choicewindow.protocol('WM_DELETE_WINDOW', lambda: self.defaultexit_window())
+        choicewindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
 
     # function which contains the add window and its contents, the add window is where the user can add new items to the
     # database
@@ -188,7 +190,7 @@ class InventorySystem(Frame):
         self.saveButton.grid(row=6, column=1, columnspan=2, pady=(2.5, 0))
 
         # button which closes the GUI
-        self.close_button = Button(addwindow, text="Exit", command=lambda: self.defaultexit_window(), width=4)
+        self.close_button = Button(addwindow, text="Exit", command=lambda: self.exit_window(), width=4)
         self.close_button.grid(row=7, column=3, sticky="e")
 
         # result of login
@@ -201,7 +203,7 @@ class InventorySystem(Frame):
         self.logoutButton.grid(row=7, column=0, sticky="w")
 
         # makes the default exit command run, whenever the user presses the default exit button
-        addwindow.protocol('WM_DELETE_WINDOW', lambda: self.defaultexit_window())
+        addwindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
 
     # function that contains the searchwindow window
     def search_window(self, window):
@@ -249,7 +251,7 @@ class InventorySystem(Frame):
         self.searchButton.grid(column=1, columnspan=2, row=5)
 
         # button which closes the GUI
-        self.close_button = Button(searchwindow, text="Exit", command=lambda: self.defaultexit_window(), width=4)
+        self.close_button = Button(searchwindow, text="Exit", command=lambda: self.exit_window(), width=4)
         self.close_button.grid(row=6, column=3, sticky="e", pady=(15, 0))
 
         # this runs the logout command causing the current window to close and to return to the login screen
@@ -257,7 +259,7 @@ class InventorySystem(Frame):
         self.logoutButton.grid(row=6, column=0, sticky="w", pady=(15, 0))
 
         # detects if the user pressed the default [X] button and runs the default exit function
-        searchwindow.protocol('WM_DELETE_WINDOW', lambda: self.defaultexit_window())
+        searchwindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
 
     # this function is run when the user presses search in the search window, it runs the results window and then
     # searches if the term is mentioned in any of the items details, then displaying applicable results
@@ -355,7 +357,7 @@ class InventorySystem(Frame):
         #### Frame END ####
 
         # button which closes the GUI
-        self.close_button = Button(resultswindow, text="Exit", command=lambda: self.defaultexit_window(), width=4)
+        self.close_button = Button(resultswindow, text="Exit", command=lambda: self.exit_window(), width=4)
         self.close_button.grid(row=7, column=3, sticky="e")
 
         # this runs the logout command causing the current window to close and to return to the login screen
@@ -363,7 +365,7 @@ class InventorySystem(Frame):
         self.logoutButton.grid(row=7, column=0, sticky="w")
 
         # if the user selecs the default [X] to exit it runs the default exit window
-        resultswindow.protocol('WM_DELETE_WINDOW', lambda: self.defaultexit_window())
+        resultswindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
 
     def item_window(self, itemname, itemlocation, itemvalue, itemowner, itemdescrip):
         # hides the previous page and sets up basics of new page
@@ -439,7 +441,7 @@ class InventorySystem(Frame):
             self.removeButton.grid(row=6, column=2, pady=(2.5, 0))
 
         # button which closes the GUI
-        self.close_button = Button(itemwindow, text="Exit", command=lambda: self.defaultexit_window(), width=4)
+        self.close_button = Button(itemwindow, text="Exit", command=lambda: self.exit_window(), width=4)
         self.close_button.grid(row=7, column=3, sticky="e")
 
         # a button that runs the logout command causing the current window to close and to return to the login screen
@@ -447,7 +449,7 @@ class InventorySystem(Frame):
         self.logoutButton.grid(row=7, column=0, sticky="w")
 
         # makes the default exit command run, whenever the user presses the default exit button
-        itemwindow.protocol('WM_DELETE_WINDOW', lambda: self.defaultexit_window())
+        itemwindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
 
     def edit_window(self, itemwindow, itemname, itemlocation, itemvalue, itemowner, itemdescrip):
         # hides the previous page and sets up basics of new page
@@ -529,7 +531,7 @@ class InventorySystem(Frame):
         self.saveeditButton.grid(row=6, column=1, columnspan=2, pady=(2.5, 0))
 
         # button which closes the GUI
-        self.close_button = Button(editwindow, text="Exit", command=lambda: self.defaultexit_window(), width=4)
+        self.close_button = Button(editwindow, text="Exit", command=lambda: self.exit_window(), width=4)
         self.close_button.grid(row=7, column=3, sticky="e")
 
         # result of login
@@ -542,60 +544,30 @@ class InventorySystem(Frame):
         self.logoutButton.grid(row=7, column=0, sticky="w")
 
         # makes the default exit command run, whenever the user presses the default exit button
-        editwindow.protocol('WM_DELETE_WINDOW', lambda: self.defaultexit_window())
+        editwindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
 
     def remove_window(self, window, prewindow, itemname, preitemdescrip, preitemowner, preitemvalue, preitemlocation):
         prewindow.withdraw()
         editwindow = Toplevel(root)
         self.editwindow = editwindow
+
     # if the user presses either of the exit buttons, default or the one labeled exit. this window pops up, and if the
     # user selects yes it runs default exit and closes everything, if the user presses no it just closes the pop up
-    def defaultexit_window(self):
-        defaultexitwindow = Toplevel(root)
-        self.defaultexitwindow = defaultexitwindow
-        self.exitsure = Label(defaultexitwindow, text="Are you sure about that?")
-        self.exitsure.grid(row=1, column=0, columnspan=2)
-        self.exityes = Button(defaultexitwindow, text="Yes", command=lambda: self.defaultExit(defaultexitwindow, "Yes"))
-        self.exityes.grid(row=2, column=0)
-        self.exitno = Button(defaultexitwindow, text="No", command=lambda: self.defaultExit(defaultexitwindow, "No"))
-        self.exitno.grid(row=2, column=1)
-
-    # run when a user makes a choice between yes or no when exiting, if they press yes it destroys all windows, if the
-    # user pressed no it just destroys the popup
-    def defaultExit(self, window, choice):
-        if choice == "Yes":
+    def exit_window(self):
+        if messagebox.askyesno("Quit", "Are you sure you want to quit"):
             root.destroy()
-        elif choice == "No":
-            window.destroy()
 
     # runs a logout popup window that asks the user if they rally want to log out, if yes the user is returned to the
     # login window and other windows are destroyed if no then only the popup window is destroyed
     def logout_window(self, window):
-        logoutwindow = Toplevel(root)
-        self.logoutwindow = logoutwindow
-        self.sure = Label(logoutwindow, text="Are you sure about that?")
-        self.sure.grid(row=1, column=0, columnspan=2)
-        self.yes = Button(logoutwindow, text="Yes", command=lambda: self.logoutConfirm(window, logoutwindow, "Yes"))
-        self.yes.grid(row=2, column=0)
-        self.no = Button(logoutwindow, text="No", command=lambda: self.logoutConfirm(window, logoutwindow, "No"))
-        self.no.grid(row=2, column=1)
-
-    # checks if the user selected a yes or no in the logout window, if yes the user is logged out, if no the logout pop
-    # up is destroyed
-    def logoutConfirm(self, window, logoutwindow, choice):
-            if choice == "Yes":
-                self.username.set("")
-                self.password.set("")
-                logoutwindow.destroy()
-                window.destroy()
-                root.deiconify()
-            elif choice == "No":
-                logoutwindow.destroy()
+        if messagebox.askyesno("Logout", "Are you sure you want to logout"):
+            root.destroy()
 
     # deletes the current window and returns to the previous one
     def back(self, window, prewindow):
         window.destroy()
         prewindow.deiconify()
+
     # run when a user tries to save an editted item, it will save the new one to the file and remove the original
     def saveedit(self, window, prewindow, preitemname, preitemdescrip, preitemowner, preitemvalue, preitemlocation):
         # opens items file and gets all of the users inputted variables
@@ -620,13 +592,16 @@ class InventorySystem(Frame):
                 if (editdescrip and editname != 0 and editprice and editdescrip and editname != "" and
                         editprice and editdescrip and editname != " " and editname != "       <Item Name>" and
                         editdescrip != "<Enter a description of the item>" and editlocation != "      <Location>"):
+                    if "," in editdescrip or "," in editname or "," in edituser:
+                        self.editResult.set("DO NOT INPUT (,) anywhere in a item")
+                        return
                     # if the input values are valid and the loop is currently on the one to be changed, it changes the
                     # item in the list to the appropriate editted item
                     cfline[currentline] = (editname + "," + editlocation + "," + str(editprice) + "," + edituser + "," +
                             editdescrip)
                 else:
                     # tells the user to input a valid value into all boxes as the test noticed a problem
-                    self.addResult.set("Please enter a valid value into all boxes")
+                    self.editResult.set("Please enter a valid value into all boxes")
                     return
             currentline += 1
         # writes the new list to the file
@@ -649,9 +624,11 @@ class InventorySystem(Frame):
         if (newdescrip and newname != 0 and newprice and newdescrip and newname != "" and
                 newprice and newdescrip and newname != " " and newname != "       <Item Name>" and newdescrip !=
             "<Enter a description of the item>" and newlocation != "      <Location>"):
+            if "," in newdescrip or "," in newname or "," in newuser:
+                self.addResult.set("DO NOT INPUT (,) anywhere in a item")
+                return
             # adds the item to the items.txt file and runs the itemadded window
-            items.write("\n")
-            items.write(newname + "," + newlocation + "," + str(newprice) + "," + newuser + "," + newdescrip)
+            items.write("\n"+newname + "," + newlocation + "," + str(newprice) + "," + newuser + "," + newdescrip)
             self.itemadded_window(window, prewindow)
         else:
             # tells the user to input a valid value into all boxes as the test noticed a problem
@@ -675,7 +652,7 @@ class InventorySystem(Frame):
         self.confirmadded.grid(row=2, column=0, columnspan=2)
 
         # runs the dfault exit function if the user uses the default exit button [X]
-        itemaddedwindow.protocol('WM_DELETE_WINDOW', self.defaultexit_window)
+        itemaddedwindow.protocol('WM_DELETE_WINDOW', self.exit_window)
 
     def itemedited_window(self, window, prewindow):
         # destroys previous window add sets up new window with title
@@ -694,7 +671,7 @@ class InventorySystem(Frame):
         self.confirmadded.grid(row=2, column=0, columnspan=2)
 
         # runs the dfault exit function if the user uses the default exit button [X]
-        itemeditedwindow.protocol('WM_DELETE_WINDOW', self.defaultexit_window)
+        itemeditedwindow.protocol('WM_DELETE_WINDOW', self.exit_window)
 
     # function which runs the information window
     def InfoWindow(self, window):
@@ -723,6 +700,9 @@ class InventorySystem(Frame):
         elif window == "itemwindow":
             self.title = 5
             self.information = 5
+        elif window == "editwindow":
+            self.title = 6
+            self.information = 6
         # runs the showinfo which that displays the appropriate information
         showinfo(ititleslist[self.title], ilist[self.information])
 

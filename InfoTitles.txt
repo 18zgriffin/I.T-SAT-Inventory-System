@@ -4,3 +4,4 @@ Search Page Information
 New Item Page Information
 Results Page Information
 Item Page Information
+Edit Page Information

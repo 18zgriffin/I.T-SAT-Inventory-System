@@ -1,13 +1,9 @@
 name,location,price,owner,description
-samsung tv,lounge,50,tim,tv with large 48inch screen
-electric shaver,bathroom,100,tom,new electric shaver with multi use function
-metal ring,bathroom,100,tom,new electric shaver with multi use function
-metal ring,breakroom,100,tom,new electric shaver with multi use function
-baking tray,counge,5,joe,silver inlayed baking tray
-bookcase,lounge,99,admin,bookcase full of the whole GOT collection
-explosive,castle,400,admin,I think its gonna blow
-dnd dice,bedroom1,500,zeke,assortment of dice
-bed,bedroom1,100,admin,blue bunk
-2tv,kitchen,204,admin,it big an blu
+pootato,bedroom1,99,jack,red
+magnificent me,bedroom1,300,callum,callum portrait painted by joe biden
+hey,lounge,1,admin,yey
+baby,bedroom1,10,admin,its a blue baby
+yago,kitchen,1,admin,mago
 
-boitoi,laundry,20,admin,it mine guys
+heeyyyyyyyyyyyyy,bedroom1,1,admin,joe
+admin,lounge,1,admin,admin
