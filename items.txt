@@ -1,9 +1,8 @@
-name,location,price,owner,description
-pootato,bedroom1,99,jack,red
-magnificent me,bedroom1,300,callum,callum portrait painted by joe biden
-hey,lounge,1,admin,yey
-baby,bedroom1,10,admin,its a blue baby
-yago,kitchen,1,admin,mago
+potato,lounge,9,admin,red and orange - yellow and green
+Macbook,lounge,10,admin,11inch Macbook air
+Fridge/Freezer,kitchen,2000,zeke,Garmin Deepfreeze tech fridge
+Hat,kitchen,10,admin,Blue
 
-heeyyyyyyyyyyyyy,bedroom1,1,admin,joe
-admin,lounge,1,admin,admin
+1,lounge,2,admin,1
+P.C (Coolermaster),bedroom2,3000,zeke,White with blue lights
+

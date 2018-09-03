@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter.messagebox import showinfo
 from tkinter import messagebox
+import random
+import tkinter.ttk as ttk
 
 class InventorySystem(Frame):
     # initializes master
@@ -10,7 +12,6 @@ class InventorySystem(Frame):
         Frame.__init__(self, master)
         # names the window
         self.master = master
-        self.existence = 0
         master.title("House Inventory - Login")
 
         # title text at the top window
@@ -88,6 +89,11 @@ class InventorySystem(Frame):
         self.choicewindow = choicewindow
         choicewindow.title("House Inventory - Selection Page")
 
+        if self.user == "admin":
+            # special button to access admin only settings
+            self.adminButton = Button(choicewindow, text="Admin Settings", command=lambda: self.admin_window(choicewindow))
+            self.adminButton.grid(row=1, column=0, columnspan=2, sticky="w")
+
         # info button displays pages information
         self.button_showinfo = Button(choicewindow, text="?", command=lambda: self.InfoWindow("choicewindow"), width=2)
         self.button_showinfo.grid(column=3, row=1, sticky="e")
@@ -119,6 +125,146 @@ class InventorySystem(Frame):
         # activates if the user ever exits this window using the default [X]
         choicewindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
 
+    def admin_window(self, choicewindow):
+        choicewindow.withdraw()
+        adminwindow = Toplevel(root)
+        self.adminwindow = adminwindow
+
+        # info button displays pages information
+        self.button_showinfo = Button(adminwindow, text="?", command=lambda: self.InfoWindow("adminwindow"), width=2)
+        self.button_showinfo.grid(column=3, row=1, sticky="e")
+
+        # small display showing which user is currently logged in
+        self.currentUser = Label(adminwindow, text="Current User: "+self.user, font=("Times", "12", "bold italic"))
+        self.currentUser.grid(column=1, columnspan=2, row=1)
+
+        # this returns to previous window
+        self.backButton = Button(adminwindow, text="Back", command=lambda: self.back(adminwindow, choicewindow))
+        self.backButton.grid(row=1, column=0, sticky="w")
+
+        # large title text of what page is, is displayed
+        self.titleText = Label(adminwindow, text="House Inventory - Admin Options", font=("Times", "24", "bold italic"))
+        self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
+
+        # button which proceeds to add user window
+        self.adduserButton = Button(adminwindow, text="New User", command=lambda: self.adduser_window(adminwindow))
+        self.adduserButton.grid(column=1, row=3)
+
+        # this runs the add location command causing the current window to close and a new add window to open
+        self.lookButton = Button(adminwindow, text="New Location", command=lambda: self.addlocation_window(adminwindow))
+        self.lookButton.grid(column=2, row=3)
+
+        # this runs the logout command causing the current window to close and to return to the login screen
+        self.logoutButton = Button(adminwindow, text="Logout", command=lambda: self.logout_window(adminwindow))
+        self.logoutButton.grid(row=4, column=0, sticky="w", pady=(15, 0))
+
+        # button which closes the GUI
+        self.close_button = Button(adminwindow, text="Exit", command=lambda: self.exit_window(), width=4)
+        self.close_button.grid(row=4, column=3, sticky="e", pady=(15, 0))
+
+        # activates if the user ever exits this window using the default [X]
+        adminwindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
+
+    def adduser_window(self, adminwindow):
+        adminwindow.withdraw()
+        adduserwindow = Toplevel(root)
+        self.adduserwindow = adduserwindow
+        adduserwindow.title("House Inventory - New User Page")
+
+        # info button displays pages information
+        self.button_showinfo = Button(adduserwindow, text="?", command=lambda: self.InfoWindow("adduserwindow"))
+        self.button_showinfo.grid(column=3, row=1, sticky="e")
+
+        # displays currently logged in user
+        self.currentUser = Label(adduserwindow, text="Current User: " + self.user, font=("Times", "12", "bold italic"))
+        self.currentUser.grid(column=1, columnspan=2, row=1)
+
+        # this returns to previous window
+        self.backButton = Button(adduserwindow, text="Back", command=lambda: self.back(adduserwindow, adminwindow))
+        self.backButton.grid(row=1, column=0, sticky="w")
+
+        # title text at the top window
+        self.titleText = Label(adduserwindow, text="House Inventory - Login", font=("Times", "24", "bold italic"))
+        self.titleText.grid(column=1, columnspan=2, row=2, pady=15)
+
+        # lable point for username
+        self.feetLabel = Label(adduserwindow, text="New Username")
+        self.feetLabel.grid(column=1, row=3, padx=(0, 10))
+        # point where the username is entered
+        self.newusername = StringVar()
+        self.entryValue = Entry(adduserwindow, textvariable=self.newusername, width=15)
+        self.entryValue.grid(row=4, column=1, sticky="w")
+
+        # lable of password
+        self.feetLabel = Label(adduserwindow, text="New Password")
+        self.feetLabel.grid(column=2, row=3, padx=(10, 0))
+        # point where the pasword is entered
+        self.newpassword = StringVar()
+        self.entryValue = Entry(adduserwindow, textvariable=self.newpassword, width=15)
+        self.entryValue.grid(row=4, column=2, sticky="e")
+
+        # this runs the submit command making the program check if the username and password is correct
+        self.savenewuserButton = Button(adduserwindow, text="Add New User", command=lambda: self.newuser())
+        self.savenewuserButton.grid(row=5, column=1, columnspan=2, pady=(2.5, 0))
+
+        # button which closes the GUI
+        self.close_button = Button(adduserwindow, text="Exit", command=lambda: self.exit_window())
+        self.close_button.grid(row=6, column=3, sticky="e")
+
+        # result of login
+        self.newattemptResult = StringVar()
+        self.feetLabel = Label(adduserwindow, textvariable=self.newattemptResult)
+        self.feetLabel.grid(column=1, row=6, columnspan=2)
+
+        # a button that runs the logout command causing the current window to close and to return to the login screen
+        self.logoutButton = Button(adduserwindow, text="Logout", command=lambda: self.logout_window(adduserwindow))
+        self.logoutButton.grid(row=7, column=0, sticky="w")
+
+        self.fillSpace = Label(adduserwindow, text="           ")
+        self.fillSpace.grid(column=0, row=6)
+
+        adduserwindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
+
+    def newuser(self):
+        username = self.newusername.get()
+        password = self.newpassword.get()
+        lusers = []
+        fusers = open("usernames.txt", "r")
+        for line in fusers:
+            lusers.append(line.strip("\n"))
+        lpasses = []
+        fpasses = open("passwords.txt", "r")
+        for line in fpasses:
+            lpasses.append(line.strip("\n"))
+        fusers.close()
+        fpasses.close()
+
+        for name in lusers:
+            if name == username:
+                self.newattemptResult.set("Username already exists, try again")
+                return
+        lusers.append(username)
+        lpasses.append(password)
+
+        fusers = open("usernames.txt", "w")
+        fpasses = open("passwords.txt", "w")
+        for line in lusers:
+            fusers.write(line)
+            fusers.write("\n")
+        for line in lpasses:
+            fpasses.write(line)
+            fpasses.write("\n")
+
+        self.action = ("user ")
+        self.itemchanged_window(self.adduserwindow, self.adminwindow)
+
+    def addlocation_window(self, adminwindow):
+        adminwindow.withdraw()
+        addlocationwindow = Toplevel(root)
+        self.addlocationwindow = addlocationwindow
+        addlocationwindow.title("House Inventory - New Location Page")
+        print("loca")
+
     # function which contains the add window and its contents, the add window is where the user can add new items to the
     # database
     def add_window(self, choicewindow):
@@ -126,11 +272,12 @@ class InventorySystem(Frame):
         choicewindow.withdraw()
         addwindow = Toplevel(root)
         self.addwindow = addwindow
+        addwindow.title("House Inventory - New Item Page")
+
         llocations = []
         flocations = open("locations.txt", "r")
         for line in flocations:
             llocations.append(line.strip("\n"))
-        addwindow.title("House Inventory - New Item Page")
 
         # info button displays pages information
         self.button_showinfo = Button(addwindow, text="?", command=lambda: self.InfoWindow("addwindow"), width=2)
@@ -159,6 +306,7 @@ class InventorySystem(Frame):
         self.newname.set("      <Item Name>")
         self.addframename = Entry(self.addframe, textvariable=self.newname, width=16)
         self.addframename.grid(column=0, row=1, sticky="w")
+        self.addframename.bind("<Button-1>", self.clear)
 
         # place that displays who the owner is which is the creator
         self.addframeowner = Label(self.addframe, text="Owner: "+self.user, width=16)
@@ -169,6 +317,7 @@ class InventorySystem(Frame):
         self.newdescrip.set("<Enter a description of the item>")
         self.addframedescrip = Entry(self.addframe, textvariable=self.newdescrip, width=36)
         self.addframedescrip.grid(column=0, row=2, columnspan=2)
+        self.addframedescrip.bind("<Button-1>", self.clear)
 
         # drop down menu the a user can select an item location from
         self.newlocation = StringVar()
@@ -183,6 +332,7 @@ class InventorySystem(Frame):
         self.newPrice.set("0")
         self.addframeprice = Entry(self.addframe, textvariable=self.newPrice, width=11)
         self.addframeprice.grid(column=0, row=3, sticky="e")
+        self.addframeprice.bind("<Button-1>", self.clear)
         #### End ####
 
         # this runs the save command causing the program to save the entered item to the database
@@ -247,7 +397,7 @@ class InventorySystem(Frame):
 
         # button which activates the search function causing a search in database to be performed and the search results
         # page to appear
-        self.searchButton = Button(searchwindow, text="Search", command=lambda: self.search(self.searchterm))
+        self.searchButton = Button(searchwindow, text="Search", command=lambda: self.search())
         self.searchButton.grid(column=1, columnspan=2, row=5)
 
         # button which closes the GUI
@@ -263,7 +413,7 @@ class InventorySystem(Frame):
 
     # this function is run when the user presses search in the search window, it runs the results window and then
     # searches if the term is mentioned in any of the items details, then displaying applicable results
-    def search(self, searchterm):
+    def search(self):
         # starts up the results window
         self.results_window(self.searchwindow)
         searchterm = self.searchterm.get()
@@ -278,7 +428,7 @@ class InventorySystem(Frame):
             # details to the results page
             foundlist = []
             for line in items:
-                found = re.search(str(searchterm), line)
+                found = re.search(str(searchterm.lower()), line.lower())
                 if found:
                     itemdetails = line.rstrip('\n')
                     itemdetails = itemdetails.split(",")
@@ -434,10 +584,12 @@ class InventorySystem(Frame):
                 itemname, itemlocation, itemvalue, itemowner, itemdescrip))
             self.removeButton.grid(row=6, column=2, pady=(2.5, 0))
         else:
-            self.editButton = Button(itemwindow, text="Edit", width=6)
+            self.editButton = Button(itemwindow, text="Edit", command=lambda: messagebox.showinfo("Permission",
+                "You dont have permission to do that"))
             self.editButton.grid(row=6, column=1, pady=(2.5, 0))
 
-            self.removeButton = Button(itemwindow, text="Remove")
+            self.removeButton = Button(itemwindow, text="Remove", command=lambda: messagebox.showinfo("Permission",
+                "You dont have permission to do that"))
             self.removeButton.grid(row=6, column=2, pady=(2.5, 0))
 
         # button which closes the GUI
@@ -546,22 +698,46 @@ class InventorySystem(Frame):
         # makes the default exit command run, whenever the user presses the default exit button
         editwindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
 
-    def remove_window(self, window, prewindow, itemname, preitemdescrip, preitemowner, preitemvalue, preitemlocation):
-        prewindow.withdraw()
-        editwindow = Toplevel(root)
-        self.editwindow = editwindow
-
+    def remove_window(self, prewindow, itemname, preitemlocation, preitemvalue, preitemowner, preitemdescrip):
+        if messagebox.askyesno("Remove", "Are you sure you want to remove the item \n"+itemname):
+            # opens items file and gets all of the users inputted variables
+            ritems = open("items.txt", "r")
+            cfline = []
+            currentline = 0
+            # checks if all values the user input are valid. Also identifies where in the file the item to be changed is. It
+            # then replaces that item with the new edit in a list
+            for line in ritems:
+                # adds every item to a list and checks if its the one to be changed
+                cline = line.strip("\n").split(",")
+                cfline.append(line.strip("\n"))
+                # checks if current line matches one to be changed
+                if (itemname == cline[0] and preitemlocation == cline[1] and preitemvalue == cline[2] and preitemowner
+                == cline[3] and preitemdescrip == cline[4]):
+                    cfline.remove(itemname+","+preitemlocation+","+preitemvalue+","+preitemowner+","+preitemdescrip)
+                currentline += 1
+            # writes the new list to the file
+            witems = open("items.txt", "w")
+            for x in cfline:
+                witems.write(x)
+                witems.write("\n")
+            # runs the item edited window for the user
+            self.action = "remove"
+            self.itemchanged_window(prewindow, self.searchwindow)
     # if the user presses either of the exit buttons, default or the one labeled exit. this window pops up, and if the
-    # user selects yes it runs default exit and closes everything, if the user presses no it just closes the pop up
+    # user selects yes it destroys the root and closes everything, if the user presses no it just closes the popup
     def exit_window(self):
         if messagebox.askyesno("Quit", "Are you sure you want to quit"):
             root.destroy()
 
-    # runs a logout popup window that asks the user if they rally want to log out, if yes the user is returned to the
-    # login window and other windows are destroyed if no then only the popup window is destroyed
+    # runs a logout popup window that asks the user if they really want to log out, if yes the user is returned to the
+    # login window and other windows are destroyed if no then only closes the popup
     def logout_window(self, window):
         if messagebox.askyesno("Logout", "Are you sure you want to logout"):
-            root.destroy()
+            self.username.set("")
+            self.password.set("")
+            self.attemptResult.set("")
+            root.deiconify()
+            window.destroy()
 
     # deletes the current window and returns to the previous one
     def back(self, window, prewindow):
@@ -610,7 +786,8 @@ class InventorySystem(Frame):
             witems.write(x)
             witems.write("\n")
         # runs the item edited window for the user
-        self.itemedited_window(window, self.searchwindow)
+        self.action = "edit"
+        self.itemchanged_window(window, self.searchwindow)
 
     def save(self, window, prewindow):
         # opens items file and gets all of the users inputted variables
@@ -629,49 +806,32 @@ class InventorySystem(Frame):
                 return
             # adds the item to the items.txt file and runs the itemadded window
             items.write("\n"+newname + "," + newlocation + "," + str(newprice) + "," + newuser + "," + newdescrip)
-            self.itemadded_window(window, prewindow)
+            self.action = ("add")
+            self.itemchanged_window(window, prewindow)
         else:
             # tells the user to input a valid value into all boxes as the test noticed a problem
             self.addResult.set("Please enter a valid value into all boxes")
 
     # popup window that happens when a item is succesfully added
-    def itemadded_window(self, window, prewindow):
-        # destroys previous window add sets up new window with title
+    def itemchanged_window(self, window, prewindow):
+        # destroys previous window and sets up new pop up window
         window.destroy()
-        itemaddedwindow = Toplevel(root)
-        self.itemaddedwindow = itemaddedwindow
-        itemaddedwindow.title("House Inventory")
-
-        # adds a title telling the user that the item was succesfully added
-        self.confirmtitle = Label(itemaddedwindow, text="Item added Successfully", font=("Times", "24", "bold italic"))
-        self.confirmtitle.grid(row=1, column=0, columnspan=2)
-
-        # a button that runs the back command as if the itemadded window was the add item window allowing the user to
-        # return to the choice page
-        self.confirmadded = Button(itemaddedwindow, text="OK", command=lambda: self.back(itemaddedwindow, prewindow))
-        self.confirmadded.grid(row=2, column=0, columnspan=2)
-
-        # runs the dfault exit function if the user uses the default exit button [X]
-        itemaddedwindow.protocol('WM_DELETE_WINDOW', self.exit_window)
-
-    def itemedited_window(self, window, prewindow):
-        # destroys previous window add sets up new window with title
-        window.destroy()
-        itemeditedwindow = Toplevel(root)
-        self.itemeditedwindow = itemeditedwindow
-        itemeditedwindow.title("House Inventory")
-
-        # adds a title telling the user that the item was succesfully added
-        self.confirmtitle = Label(itemeditedwindow, text="Item edit Successful", font=("Times", "24", "bold italic"))
-        self.confirmtitle.grid(row=1, column=0, columnspan=2)
-
-        # a button that runs the back command as if the itemadded window was the add item window allowing the user to
-        # return to the choice page
-        self.confirmadded = Button(itemeditedwindow, text="OK", command=lambda: self.back(itemeditedwindow, prewindow))
-        self.confirmadded.grid(row=2, column=0, columnspan=2)
-
-        # runs the dfault exit function if the user uses the default exit button [X]
-        itemeditedwindow.protocol('WM_DELETE_WINDOW', self.exit_window)
+        if self.action == "add":
+            if messagebox.showinfo("Item Added", "Item Added succesfully"):
+                self.action = None
+                self.back(window, prewindow)
+        elif self.action == "edit":
+            if messagebox.showinfo("Item Edited", "Item Edited succesfully"):
+                self.action = None
+                self.back(window, prewindow)
+        elif self.action == "remove":
+            if messagebox.showinfo("Item Removed", "Item Removed succesfully"):
+                self.action = None
+                self.back(window, prewindow)
+        elif self.action == "user":
+            if messagebox.showinfo("User Added", "New User Added succesfully"):
+                self.action = None
+                self.back(window, prewindow)
 
     # function which runs the information window
     def InfoWindow(self, window):
@@ -706,6 +866,9 @@ class InventorySystem(Frame):
         # runs the showinfo which that displays the appropriate information
         showinfo(ititleslist[self.title], ilist[self.information])
 
+    def clear(self, event):
+        event.widget.delete(0, "end")
+        return None
 # starts up the GUI
 root = Tk()
 gui = InventorySystem(root)
