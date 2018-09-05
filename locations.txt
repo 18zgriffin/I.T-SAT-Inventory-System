@@ -1,7 +1,10 @@
-lounge
 bedroom1
 bedroom2
+bedroom3
+bedroom4
 kitchen
 bathroom1
 bathroom2
-laundry
+breakroom
+bedroom
+backroom

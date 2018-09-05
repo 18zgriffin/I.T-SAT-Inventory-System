@@ -5,3 +5,6 @@ This is the add page on this page you can add a new item by inputing appropriate
 This page displays the results of the search input, you may sometimes get no results. Click on the button with an item name on it to go to that items page
 This page displays all of an items details including description, if you are the owner or an admin you can access the edit button which allows you to change the items details
 On this page you can edit the details of an item. You cannot input commas(,) into an item so use (-) or (/) instead. Also be aware if you change the owner you will lose the ability to edit the item.
+This page can only be accessed if you are an admin user, if you have reached this and are not an admin please exit immediately. An admin on this page can choose to add a new user or new location be clicking the appropriate button
+This page can only be accessed if you are an admin user, if you have reached this and are not an admin please exit immediately. An admin on this page can type in a new username and password that does not already exist and add it to the database
+This page can only be accessed if you are an admin user, if you have reached this and are not an admin please exit immediately. An admin on this page can type in a location that does not already exist and add it to the database

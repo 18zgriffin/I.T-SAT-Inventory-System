@@ -5,3 +5,6 @@ New Item Page Information
 Results Page Information
 Item Page Information
 Edit Page Information
+Admin Page Information
+Add User Page Information
+Add Location Page Information

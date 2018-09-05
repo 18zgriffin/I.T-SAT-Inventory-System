@@ -8,3 +8,7 @@ brent
 josh
 joe
 bry
+chris
+jesus
+david
+jon

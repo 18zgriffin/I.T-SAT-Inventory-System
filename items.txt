@@ -1,8 +1,11 @@
-potato,lounge,9,admin,red and orange - yellow and green
-Macbook,lounge,10,admin,11inch Macbook air
+potato,lounge,999999,callum,red and orange - yellow and green
+Macbook,lounge,10,brent,11inch Macbook air
 Fridge/Freezer,kitchen,2000,zeke,Garmin Deepfreeze tech fridge
 Hat,kitchen,10,admin,Blue
 
-1,lounge,2,admin,1
 P.C (Coolermaster),bedroom2,3000,zeke,White with blue lights
 
+
+bed,bedroom,50,josh,its a blue bed yes
+
+macbook air,bedroom1,1000,zeke,2011 macbook air 11inch
