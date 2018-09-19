@@ -1,14 +1,5 @@
 admin
 zeke
-ryan
-callum
-jack
 stuart
-brent
-josh
-joe
-bry
-chris
-jesus
-david
-jon
+jack
+callum

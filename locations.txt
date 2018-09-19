@@ -1,10 +1,9 @@
-bedroom1
-bedroom2
-bedroom3
-bedroom4
+master bedroom
+back bedroom
+top floor bedroom
 kitchen
-bathroom1
-bathroom2
-breakroom
-bedroom
+master bathroom
+common bathroom
 backroom
+lounge
+attic

@@ -126,7 +126,7 @@ class InventorySystem(Frame):
         # activates if the user ever exits this window using the default [X] and asks the user if they are sure
         choicewindow.protocol('WM_DELETE_WINDOW', lambda: self.exit_window())
 
-    # special admin window that an admin can choos to add a user or location from
+    # special admin window that an admin can choose to add a user or location from
     def admin_window(self, choicewindow):
         choicewindow.withdraw()
         adminwindow = Toplevel(root)
@@ -414,7 +414,7 @@ class InventorySystem(Frame):
         # label of price and entry box to enter the price of the item into
         self.addframepricelabel = Label(self.addframe, text="Price:$")
         self.addframepricelabel.grid(column=0, row=3, sticky="w")
-        self.newPrice = IntVar()
+        self.newPrice = DoubleVar()
         self.newPrice.set("0")
         self.addframeprice = Entry(self.addframe, textvariable=self.newPrice, width=11)
         self.addframeprice.grid(column=0, row=3, sticky="e")
@@ -444,21 +444,37 @@ class InventorySystem(Frame):
     # save command that is run when a new item is trying to be added
     def save(self, window, prewindow):
         # opens items file and gets all of the users inputted variables
-        items = open("items.txt", "a")
+        items = open("items.txt", "r")
         newlocation = self.newlocation.get()
         newdescrip = self.newdescrip.get()
         newname = self.newname.get()
         newuser = self.user
-        newprice = self.newPrice.get()
+        # tests if the user input a valid float number in as the price, if not it tells user to do so
+        try:
+            newprice = self.newPrice.get()
+        except TclError:
+            self.addResult.set("Please input price as a number character eg(1,2...)")
+            return
+
         # checks if all values the user input are valid and that the user actually input a value
         if (newdescrip and newname != 0 and newprice and newdescrip and newname != "" and
                 newprice and newdescrip and newname != " " and newname != "       <Item Name>" and newdescrip !=
-            "<Enter a description of the item>" and newlocation != "     <Location>") and newprice <= 999999:
+            "<Enter a description of the item>" and newlocation != "     <Location>") and len(str(newprice)) <= 9:
+            # checks if the invalid value of "," is inputed important exception that a user cannot input
             if "," in newdescrip or "," in newname or "," in newuser:
                 self.addResult.set("DO NOT INPUT (,) anywhere in a item")
                 return
+            # checks if the item name already exists in the database
+            for item in items:
+                if newname == item.split(",")[0]:
+                    self.addResult.set("Item name already exists, try again")
+                    return
+
             # adds the item to the items.txt file and runs the itemadded window
-            items.write("\n"+newname + "," + newlocation + "," + str(newprice) + "," + newuser + "," + newdescrip)
+            items = open("items.txt", "a")
+            items.write("\n")
+            items.write(newname + "," + newlocation + "," + str(newprice) + "," + newuser + "," + newdescrip)
+
             # sets action to "add" which lets the itemchanged window know what to display
             self.action = ("add")
             # runs itemchanged window which displays a popup as determined by the action value
@@ -529,9 +545,31 @@ class InventorySystem(Frame):
         # starts up the results window
         self.results_window(self.searchwindow)
         searchterm = self.searchterm.get()
-        # gets items file ready to use
-        items = open("items.txt", "r")
         resultcount = 0
+
+        # gets items file ready to use and sets up list variables
+        fitems = open("items.txt", "r")
+        lnames = []
+
+        # creates a list of just the names of the items in the database
+        for details in fitems:
+            splitdetails = details.split(",")
+            name = splitdetails[0]
+            lnames.append(name.lower())
+
+        # sorts this list using the mergesort function called WordSort
+        sortedlist = self.WordSort(lnames)
+
+        # using the sorted list of names a new list is created in the same order but with all the other details included
+        # only one of each item name can be in the database because of this. A test for that was added to the add
+        # function after this. Items are sorted alphabetically so that they can be easily searched by a user in results
+        sorteditems = []
+        for sortedvalue in sortedlist:
+            fitems = open("items.txt", "r")
+            for details in fitems:
+                name = details.split(",")[0].lower()
+                if name == sortedvalue:
+                    sorteditems.append(details.strip("\n"))
 
         # checks if a search was even input and tells the user on the next page to input an actual value
         if searchterm == " " or searchterm == "":
@@ -541,11 +579,11 @@ class InventorySystem(Frame):
             # for every item set it checks if the search term is found in it, if it is then it adds the item and its other
             # details to the results page
             foundlist = []
-            for line in items:
-                found = re.search(str(searchterm.lower()), line.lower())
+            for item in sorteditems:
+                found = re.search(str(searchterm.lower()), item.lower())
                 # this is run if the searchterm is found in the item this adds it to the results
                 if found:
-                    itemdetails = line.rstrip('\n')
+                    itemdetails = item.rstrip('\n')
                     itemdetails = itemdetails.split(",")
 
                     # re-setups variable names to be added to the window of results everytime a new result is found
@@ -616,11 +654,11 @@ class InventorySystem(Frame):
         self.resultsframeidname = Label(self.resultsframe, text="Item Name")
         self.resultsframeidname.grid(row=1, column=0, padx=(0, 1), pady=(0,1), sticky="we")
         self.resultsframeidlocation = Label(self.resultsframe, text="   Location   ")
-        self.resultsframeidlocation.grid(row=1, column=1, padx=(0, 1))
+        self.resultsframeidlocation.grid(row=1, column=1, padx=(0, 1), sticky="we")
         self.resultsframeidvalue = Label(self.resultsframe, text="  Value  ")
-        self.resultsframeidvalue.grid(row=1, column=2, padx=(0, 1))
+        self.resultsframeidvalue.grid(row=1, column=2, padx=(0, 1), sticky="we")
         self.resultsframeidowner = Label(self.resultsframe, text="  Owner  ")
-        self.resultsframeidowner.grid(row=1, column=3)
+        self.resultsframeidowner.grid(row=1, column=3, sticky="we")
         #### Frame END ####
 
         # button which closes the GUI, after asking user if they are sure
@@ -985,6 +1023,61 @@ class InventorySystem(Frame):
             self.attemptResult.set("")
             root.deiconify()
             window.destroy()
+
+    # This is the complex algorithm
+    ## Mergesort Based function based upon Mergesort.py but Stuart Thornhill created on 2/8/2018 ##
+    # Merge sort function, recursively sorts 2 lists to return a fully sorted list in the end
+    # Used to sort results of a search into alphabetical order so that results display is easier to understand
+    def WordSort(self, sortinglist):
+        # Check to see if the list is only a single item, if so return the single item list
+        if (len(sortinglist) <= 1):
+            return sortinglist
+
+        # Setting up initial variable for splitting lists
+        listLength = len(sortinglist)
+        index = 0
+        list1 = []
+        list2 = []
+
+        # Loop that splits 1 list into 2 lists of roughly equal length
+        while index < listLength:
+            if (index + 1 <= int((listLength) / 2)):
+                list1.append(sortinglist[index])
+            else:
+                list2.append(sortinglist[index])
+            index += 1
+
+        # Take our 2 lists, and give one each to a recursive call of MergeSort (this function)
+        returnedList1 = self.WordSort(list1)
+        returnedList2 = self.WordSort(list2)
+
+        # Initise the list to return
+        sortedList = []
+
+        # This loop will run based on the total length of both lists
+        for i in range(0, len(list1) + len(list2)):
+            # We check if we are out of value for list1
+            if len(returnedList1) < 1:
+                # If we are out of values append the rest of list2 and end the loop
+                for i in returnedList2:
+                    sortedList.append(i)
+                break
+            # Same as above, only for list2, then appending list1
+            if len(returnedList2) < 1:
+                for i in returnedList1:
+                    sortedList.append(i)
+                break
+            # Check which value is smaller and add that next to the sorted list
+            if returnedList1[0] < returnedList2[0]:
+                sortedList.append(returnedList1.pop(0))
+            elif returnedList2[0] < returnedList1[0]:
+                sortedList.append(returnedList2.pop(0))
+            # Values must be equal, add both to sorted list
+            else:
+                sortedList.append(returnedList1.pop(0))
+                sortedList.append(returnedList2.pop(0))
+
+        return sortedList
 
     # deletes the current window and returns to the previous one
     def back(self, window, prewindow):

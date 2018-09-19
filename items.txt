@@ -1,11 +1,5 @@
-potato,lounge,999999,callum,red and orange - yellow and green
-Macbook,lounge,10,brent,11inch Macbook air
-Fridge/Freezer,kitchen,2000,zeke,Garmin Deepfreeze tech fridge
-Hat,kitchen,10,admin,Blue
-
-P.C (Coolermaster),bedroom2,3000,zeke,White with blue lights
-
-
-bed,bedroom,50,josh,its a blue bed yes
-
-macbook air,bedroom1,1000,zeke,2011 macbook air 11inch
+Sony Heater,master bedroom,250.0,admin,Sony ProHeat
+Fridge,kitchen,450,zeke,Garmin deepsoften hightech
+Freezer,kitchen,600.0,admin,Deepfreeze Garmin tech fridge
+Tv, lounge, 300.0, admin, Warm
+Couch,master bedroom,100.0,admin,Blue sofa with orang cushions
