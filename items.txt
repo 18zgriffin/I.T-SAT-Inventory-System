@@ -1,5 +1,8 @@
 Sony Heater,master bedroom,250.0,admin,Sony ProHeat
-Fridge,kitchen,450,zeke,Garmin deepsoften hightech
+Fridge,kitchen,450,user2,Garmin deepsoften hightech
 Freezer,kitchen,600.0,admin,Deepfreeze Garmin tech fridge
-Tv, lounge, 300.0, admin, Warm
-Couch,master bedroom,100.0,admin,Blue sofa with orang cushions
+DefaultItem1,lounge,500,user3,Testing item named Default Item1
+TestingItemNames,kitchen,100,user3,Testing item with its own name
+television,backroom,500,user3,super samsung original box type
+super T.V,backroom,500,user3,samsung original box type
+TestItem2,bathroom,50,user3,Testing item name TestItem2

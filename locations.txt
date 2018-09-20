@@ -1,9 +1,7 @@
 master bedroom
-back bedroom
-top floor bedroom
+guest bedroom
 kitchen
-master bathroom
-common bathroom
+bathroom
 backroom
 lounge
 attic
